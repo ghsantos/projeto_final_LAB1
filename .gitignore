@@ -1,0 +1,8 @@
+# .gitignore #
+##############
+
+# Compiled sources #
+####################
+*.o
+*.out
+*.exe
