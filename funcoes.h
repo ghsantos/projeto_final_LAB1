@@ -7,6 +7,36 @@
 #include <ctype.h>
 
 /*
+    Objetivo: ler e alocar dinamicamente uma string
+    Parâmetros: nenhum
+    retorno: o endereco de memoria da string alocada
+*/
+char * leAlocaStr(){
+
+	char *str;
+	char aux;
+	int cont=0;
+	
+	str = (char *) malloc(sizeof(char));
+	
+	do{
+		aux = getchar();
+		
+		if(aux != '\n'){
+			str[cont] = aux;
+			
+			str = (char *) realloc(str, sizeof(char) * (cont + 2));
+		} else{
+			str[cont] = '\0';
+		}
+	
+		++cont;
+	}while(aux != '\n');
+
+	return str;
+}
+
+/*
     Objetivo: ler corretamente uma string
     Parâmetros: Uma referencia para uma string e o tamanho dela
     retorno: nenhum
