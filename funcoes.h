@@ -1,7 +1,19 @@
 #ifndef FUNC_LAB_H
 #define FUNC_LAB_H
 
+#ifdef __linux__
+#include <stdio_ext.h>
+
+#define LIMPA_TELA printf("\e[H\e[2J")
+#define LIMPA_BUFFER  __fpurge(stdin)
+
+#else
 #include <stdio.h>
+
+#define LIMPA_TELA system("cls")
+#define LIMPA_BUFFER fflush(stdin)
+#endif
+
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -19,6 +31,8 @@ char * leAlocaStr(){
 	
 	str = (char *) malloc(sizeof(char));
 	
+	LIMPA_BUFFER;
+	
 	do{
 		aux = getchar();
 		
@@ -32,6 +46,8 @@ char * leAlocaStr(){
 	
 		++cont;
 	}while(aux != '\n');
+
+	LIMPA_BUFFER;
 
 	return str;
 }
