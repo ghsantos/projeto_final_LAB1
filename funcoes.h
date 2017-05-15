@@ -17,6 +17,10 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <time.h>
+
+
+#define MAX_MATRICULA 50000
 
 /*
     Objetivo: ler e alocar dinamicamente uma string
@@ -217,6 +221,21 @@ void toupperStr(char *str){
 	for(cont = 0; cont < strlen(str); ++cont){
 		str[cont] = tolower(str[cont]);
 	}
+}
+
+/*
+	Objetivo: Gerar um numero aleatorio menor que MAX_MATRICULA
+	Parâmetros: nenhum
+	retorno: o numero aleatorio
+*/
+int geraNumAle(){
+	int num;
+	
+	srand((unsigned)time(NULL));
+	
+	num = rand() % MAX_MATRICULA;
+	
+	return num;
 }
 
 #endif // #define FUNC_LAB_H
