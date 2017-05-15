@@ -1,4 +1,12 @@
-
+/*
+	Sintese:
+		Objetivo: Elaborar um programa para auxiliar no controle das
+		atividades realizadas pelos frequentadores de uma rede de academias.
+	
+		Entrada: Dados dos frequentadores, series e atividades das academias
+		
+		Saida: Varias pesquisas
+*/
 
 #include "funcoes.h"
 #include "estruturas.h"
