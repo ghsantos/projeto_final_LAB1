@@ -61,14 +61,22 @@ char * leAlocaStr(){
     Parâmetros: Uma referencia para uma string e o tamanho dela
     retorno: nenhum
 */
-void leString(char *str, int tamanho){
+int leValidaString(char *str, int max, int min){
+
+	int leituraValida = 1;
 
 	LIMPA_BUFFER;
-	fgets(str, tamanho, stdin);
+	fgets(str, max, stdin);
 
 	if(str[strlen(str) - 1] == '\n'){
 		str[strlen(str) - 1] = '\0';
 	}
+	
+	if(strlen(str) < min || strlen(str) > max){
+		leituraValida = 0;
+	}
+	
+	return leituraValida;
 }
 
 /*
