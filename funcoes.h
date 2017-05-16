@@ -58,8 +58,8 @@ char * leAlocaStr(){
 
 /*
     Objetivo: ler corretamente uma string
-    Parâmetros: Uma referencia para uma string e o tamanho dela
-    retorno: nenhum
+    Parâmetros: Uma referencia para uma string, o tamanho maximo e minimo dela
+    retorno: 1 se leu corretamente a string ou 0 caso contrario
 */
 int leValidaString(char *str, int max, int min){
 
