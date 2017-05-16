@@ -246,4 +246,23 @@ int geraNumAle(){
 	return num;
 }
 
+/*
+	Objetivo: verificar se um arquivo existe ou nao
+	Parâmetros: o endereco do nome do arquivo
+	retorno: 1 ele existe, 0 nao
+*/
+int verificaArqExiste(char *nomeArqv){
+	FILE *arqv;
+
+	arqv = fopen(nomeArqv, "r");
+
+	if(arqv != NULL){
+		fclose(arqv);
+		
+		return 1;
+	} 
+	
+	return 0;
+}
+
 #endif // #define FUNC_LAB_H
