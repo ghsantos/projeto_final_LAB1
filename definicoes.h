@@ -30,10 +30,18 @@
 #define TAM_MAX_NOME_FREQ 50
 #define TAM_CPF 12
 #define TAM_DESCRICAO_SERIE 150
+#define TAM_MIN_DESCRICAO_SERIE 8
 #define NOME_ARQ_ACAD "dadosAcademia.bin"
 #define NOME_ARQ_FREQ "dadosFrequentadores.bin"
 #define NOME_ARQ_SERIEEX "dadosSerieExercicios.bin"
 #define NOME_ARQ_ATIVDESEV "dadosAtivDesenvolvidas.bin"
+
+#define VAL_MAX_ID_SERIE 50000
+#define VAL_MIM_ID_SERIE 1
+#define VAL_MAX_DURACAO_SERIE 200
+#define VAL_MIM_DURACAO_SERIE 5
+#define VAL_MAX_CAL_PERDIDAS 20000
+#define VAL_MIM_CAL_PERDIDAS 100
 
 // Includes
 #include <string.h>
