@@ -12,7 +12,7 @@
 int leValidaInt(char *msg, char *msgErro, int valMin, int valMax){
 	int nro, resultValidScanf;
 	
-	printf(msg);
+	printf("%s", msg);
 	do{
 		do{
 			LIMPA_BUFFER;
@@ -25,7 +25,7 @@ int leValidaInt(char *msg, char *msgErro, int valMin, int valMax){
 		}while(resultValidScanf == 0);
 		
 		if(nro < valMin || nro > valMax){
-			printf(msgErro);
+			printf("%s",msgErro);
 		}
 	}while(nro < valMin || nro > valMax);
 	
@@ -42,7 +42,7 @@ float leValidaFloat(char *msg, char *msgErro, float valMin, float valMax){
 	float nro;
 	int resultValidScanf;
 	
-	printf(msg);
+	printf("%s",msg);
 	do{
 		do{
 			LIMPA_BUFFER;
@@ -55,7 +55,7 @@ float leValidaFloat(char *msg, char *msgErro, float valMin, float valMax){
 		}while(resultValidScanf == 0);
 		
 		if(nro < valMin || nro > valMax){
-			printf(msgErro);
+			printf("%s",msgErro);
 		}
 	}while(nro < valMin || nro > valMax);
 	
@@ -69,7 +69,7 @@ float leValidaFloat(char *msg, char *msgErro, float valMin, float valMax){
 	Retorno: nenhum
 */
 void leValidaTexto(char *msg, char *msgErro, char *texto, int tamMinTexto, int tamMaxTexto){
-	printf(msg);
+	printf("%s",msg);
 	do{
 		LIMPA_BUFFER;
 		fgets(texto, tamMaxTexto, stdin);
@@ -77,7 +77,7 @@ void leValidaTexto(char *msg, char *msgErro, char *texto, int tamMinTexto, int t
 		tiraTerminador(texto);
 		
 		if(strlen(texto) < tamMinTexto){
-			printf(msgErro);
+			printf("%s",msgErro);
 		}
 	}while(strlen(texto) < tamMinTexto);
 }
@@ -101,14 +101,14 @@ void tiraTerminador(char *texto){
 char leValidaOpcao(char *msg, char *msgErro, char *opcoesValidas){
 	char opcao;
 	
-	printf(msg);
+	printf("%s",msg);
 	do{
 		LIMPA_BUFFER;
 		opcao = toupper(getchar());
 		LIMPA_BUFFER;
 		
 		if(strchr(opcoesValidas, opcao) == NULL){
-			printf(msgErro);
+			printf("%s",msgErro);
 		}
 	}while(strchr(opcoesValidas, opcao) == NULL);
 	
