@@ -1,6 +1,8 @@
 #ifndef ESTRUTURAS_H
 #define ESTRUTURAS_H
 
+#include "definicoes.h"
+
 typedef struct Data{
 	int dia;
 	int mes;
@@ -9,20 +11,25 @@ typedef struct Data{
 
 typedef struct Horario{
 	int hora;
-	int minuto;
+	int minutos;
 } Horario;
+
+typedef struct Academia{
+	char nome[TAM_MAX_NOME_ACADEMIA];
+	char endereco[TAM_MAX_END_ACADEMIA];
+} Academia;
 
 typedef struct Frequentador{
 	int matricula;
-	char *nome;
-	char *cpf;
+	char nome[TAM_MAX_NOME_FREQ];
+	char cpf[TAM_CPF];
 	char sexo;
 	struct Data dataIngresso;
 } Frequentador;
 
 typedef struct SerieExercicio{
 	int identificadorSerie;
-	char *descricao;
+	char descricao[TAM_DESCRICAO_SERIE];
 	int duracao;
 	int qtdCaloriasPerdidas;
 } SerieExercicio;
