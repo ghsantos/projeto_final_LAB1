@@ -14,6 +14,7 @@ int geraNroIntAleatorio(int valMin, int valMax);
 Data obtemDataSistema(void);
 Horario obtemHoraSistema(void);
 int verificaArqExiste(char *nomeArq);
+void continuarComEnter(void);
 void apresentaOpcoesMenu(void);
 
 #endif // FUNCOES_BASICAS_H

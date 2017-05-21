@@ -211,6 +211,20 @@ int verificaArqExiste(char *nomeArq){
 }
 
 /*
+	Objetivo: pausar a execucao do programa ate o usuario
+			  digitar enter
+	Parametros: nenhum
+	Retorno: nenhum
+*/
+void continuarComEnter(){
+	printf("\nDigite [ENTER] para continuar\n");
+	
+	LIMPA_BUFFER;
+	getchar();
+	LIMPA_BUFFER;
+}
+
+/*
 	Objetivo: Apresentar as opcoes do menu
 	Parametros: nenhum
 	Retorno: nenhum
