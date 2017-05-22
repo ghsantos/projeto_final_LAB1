@@ -13,6 +13,7 @@
 #include "definicoes.h"
 #include "funcoesBasicas.h"
 #include "academia.h"
+#include "frequentador.h"
 
 int main(void){
 	char opcaoDesejada;
@@ -33,15 +34,19 @@ int main(void){
 		apresentaDadosAcademia();
 		apresentaOpcoesMenu();
 		opcaoDesejada = leValidaOpcao("\nOpcao desejada: ", "Opcao invalida... Digite novamente: ", "ABCDEFGHZ");
+		LIMPA_TELA;
 		
 		switch(opcaoDesejada){
 			case 'A':
+				cadastraFrequentador();
 				break;
 			
 			case 'B':
+				alteraDadosFrequentador();
 				break;
 				
 			case 'C':
+				excluiFrequentador();
 				break;
 				
 			case 'D':
@@ -60,7 +65,7 @@ int main(void){
 				break;
 				
 			case 'Z':
-				printf("\n\nPrograma encerrado!");
+				printf("Programa encerrado!\n");
 				break;
 		}
 	}while(opcaoDesejada != 'Z');
