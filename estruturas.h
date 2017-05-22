@@ -23,6 +23,7 @@ typedef struct Frequentador{
 	int matricula;
 	char nome[TAM_MAX_NOME_FREQ];
 	char cpf[TAM_CPF];
+	float peso;
 	char sexo;
 	struct Data dataIngresso;
 } Frequentador;
