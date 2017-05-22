@@ -13,7 +13,8 @@ int verifArqAcademiaValido(void){
 	FILE *arq;
 	int arqValido=0;
 	
-	if((arq = fopen(NOME_ARQ_ACAD, "rb")) != NULL){
+	arq = fopen(NOME_ARQ_ACAD, "rb");
+	if(arq != NULL){
 		while(feof(arq) == 0){
 			if(fread(&academia, sizeof(Academia), 1, arq) == 1){
 				arqValido=1;
@@ -35,7 +36,8 @@ void apresentaDadosAcademia(void){
 	FILE *arq;
 	int dadosEncontrados=0;
 	
-	if((arq = fopen(NOME_ARQ_ACAD, "rb")) != NULL){
+	arq = fopen(NOME_ARQ_ACAD, "rb");
+	if(arq != NULL){
 		if(fread(&academia, sizeof(Academia), 1, arq) == 1){
 			dadosEncontrados=1;
 		}
@@ -65,6 +67,8 @@ int cadastraAcademia(void){
 	// Tentando gravar os dados da academia em um arquivo de saida
 	if(gravaArqDadosAcademia(&academia) == 1){
 		printf("\n\nDados gravados com sucesso!");
+		printf("\n\nPressione 'Enter' para continuar...");
+		getchar();
 		cadastroConcluido=1;
 	}
 	
@@ -80,7 +84,8 @@ int gravaArqDadosAcademia(Academia *academia){
 	FILE *arq;
 	int gravacaoConcluida;
 	
-	if((arq = fopen(NOME_ARQ_ACAD, "wb")) != NULL){
+	arq = fopen(NOME_ARQ_ACAD, "wb");
+	if(arq != NULL){
 		if(fwrite(academia, sizeof(Academia), 1, arq) == 1){
 			gravacaoConcluida=1;
 		}
