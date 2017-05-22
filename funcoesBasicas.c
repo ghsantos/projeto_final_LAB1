@@ -116,6 +116,24 @@ char leValidaOpcao(char *msg, char *msgErro, char *opcoesValidas){
 }
 
 /*
+	Objetivo: Verificar se um nro de CPF e valido
+	Parametros: endereco de memoria da string com o CPF
+	Retorno: 0(invalido) ou 1(valido)
+*/
+int verifCPFValido(char *cpf){
+	int cont;
+	
+	// Verificando se foi digitado apenas nros
+	for(cont=0; cont<strlen(cpf); cont++){
+		if(!isdigit(cpf[cont])){
+			return 0;
+		}
+	}
+	
+	return 1;
+}
+
+/*
 	Objetivo: Conveter os caracteres de uma string para minusculo
 	Parametros: endereco de memoria da string a ser modificada
 	Retorno: nenhum
@@ -211,13 +229,12 @@ int verificaArqExiste(char *nomeArq){
 }
 
 /*
-	Objetivo: pausar a execucao do programa ate o usuario
-			  digitar enter
-	Parametros: nenhum
+	Objetivo: Pausar a execucao do programa ate o usuario digitar enter
+	Parametros: endereco de memoria da string com a mensagem a ser exibida
 	Retorno: nenhum
 */
-void continuarComEnter(){
-	printf("\nDigite [ENTER] para continuar\n");
+void continuarComEnter(char *msg){
+	printf("%s", msg);
 	
 	LIMPA_BUFFER;
 	getchar();
