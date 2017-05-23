@@ -21,9 +21,8 @@ int existeSerie(int identificadorSerie){
 				}
 			}
 		}
+		fclose(arqv);
 	}
-	
-	fclose(arqv);
 	
 	return existe;
 }
