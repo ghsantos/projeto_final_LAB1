@@ -14,6 +14,7 @@
 #include "funcoesBasicas.h"
 #include "academia.h"
 #include "frequentador.h"
+#include "series.h"
 
 int main(void){
 	char opcaoDesejada;
@@ -50,12 +51,15 @@ int main(void){
 				break;
 				
 			case 'D':
+				cadastraNovaSerie();
 				break;
 			
 			case 'E':
+				alteraDadosSeries();
 				break;
 				
 			case 'F':
+				excluirSeries();
 				break;
 				
 			case 'G':
