@@ -48,9 +48,8 @@ SerieExercicio obtemSerie(int identificadorSerie){
 				}
 			}
 		}
+		fclose(arqv);
 	}
-	
-	fclose(arqv);
 	
 	return serieLida;
 }
@@ -93,9 +92,8 @@ void listaSerieExercicios(){
 				++cont;
 			}
 		}
+		fclose(arqv);
 	}
-	
-	fclose(arqv);
 }
 
 /*
