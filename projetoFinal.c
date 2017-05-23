@@ -1,13 +1,16 @@
-// Aluno : 
+// Aluno : Gustavo Henrique de Oliveira Santos
+// Matricula: UC16200774
+// Aluno : Isnard de Sousa Silva
+// Matricula: UC16200677
 
 /*
- Sintese
-   Objetivo:
- 
-   Entrada : 
-
-   Saida   :  
-
+	Sintese:
+		Objetivo: Elaborar um programa para auxiliar no controle das
+		atividades realizadas pelos frequentadores de uma rede de academias.
+	
+		Entrada: Dados dos frequentadores, series e atividades das academias
+		
+		Saida: Varias pesquisas
 */
 
 #include "definicoes.h"
