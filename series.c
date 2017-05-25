@@ -139,7 +139,7 @@ void cadastraNovaSerie(){
 	
 	// A serie de exercicios ja existe
 	if(!leSerieExercicios(&serie, 1)){
-		printf("Serie ja cadatrada\n");
+		printf("Serie ja cadastrada\n");
 		
 		continuarComEnter("\nPressione [Enter] para continuar...\n");
 		
@@ -177,7 +177,7 @@ void alteraDadosSeries(){
 	char continuar;
 	
 	if(!verificaArqExiste(NOME_ARQ_SERIEEX)){
-		printf("Nenhuma serie de exercicio cadatrada\n");
+		printf("Nenhuma serie de exercicio cadastrada\n");
 		
 		continuarComEnter("\nPressione [Enter] para continuar...\n");
 		
@@ -260,7 +260,7 @@ void excluirSeries(){
 	char continuar;
 	
 	if(!verificaArqExiste(NOME_ARQ_SERIEEX)){
-		printf("Nenhuma serie de exercicio cadatrada\n");
+		printf("Nenhuma serie de exercicio cadastrada\n");
 		
 		continuarComEnter("\nPressione [Enter] para continuar...\n");
 		
