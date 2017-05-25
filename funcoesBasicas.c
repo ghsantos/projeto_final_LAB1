@@ -224,6 +224,9 @@ int verificaArqExiste(char *nomeArq){
 	if(arq == NULL){
 		return 0;
 	} else {
+	
+		fclose(arq);
+	
 		return 1;
 	}
 }

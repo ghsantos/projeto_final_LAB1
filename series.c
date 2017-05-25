@@ -308,6 +308,10 @@ void excluirSeries(){
 					
 					continuarComEnter("\nPressione [Enter] para continuar...\n");
 				
+					fclose(arqv);
+	
+					fclose(arqvAux);
+				
 					return;
 				}
 			}
