@@ -18,6 +18,7 @@
 #include "academia.h"
 #include "frequentador.h"
 #include "series.h"
+#include "atividades.h"
 
 int main(void){
 	char opcaoDesejada;
@@ -66,6 +67,7 @@ int main(void){
 				break;
 				
 			case 'G':
+				cadastraAtividade();
 				break;
 				
 			case 'H':
