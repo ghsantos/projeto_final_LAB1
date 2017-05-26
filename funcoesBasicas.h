@@ -14,6 +14,7 @@ void toUpperStr(char *str);
 int geraNroIntAleatorio(int valMin, int valMax);
 Data obtemDataSistema(void);
 Horario obtemHoraSistema(void);
+int diferencaDias(Data dataInicial, Data dataFinal);
 int verificaArqExiste(char *nomeArq);
 void continuarComEnter(char *msg);
 void apresentaOpcoesMenu(void);

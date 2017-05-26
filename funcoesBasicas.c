@@ -213,6 +213,31 @@ Horario obtemHoraSistema(void){
 }
 
 /*
+	Objetivo: obter a diferenca em dias entre duas datas
+	Parametros: duas structs do tipo Data
+	Retorno: a diferenca em dias entre as datas
+*/
+int diferencaDias(Data dataInicial, Data dataFinal){
+	int dias=0;
+	
+	dias += (dataFinal.ano - dataInicial.ano) * 365;
+	
+	if(dataFinal.mes < dataInicial.mes){
+		dias -= 365;
+	}
+	
+	dias += (dataFinal.mes - dataInicial.mes) * 30;
+	
+	if(dataFinal.dia < dataInicial.dia){
+		dias -= 30;
+	}
+	
+	dias += dataFinal.dia - dataInicial.dia;
+	
+	return dias;
+}
+
+/*
 	Objetivo: Verificar se um arquivo existe
 	Parametros: endereco de memoria da string com o nome do arquivo
 	Retorno: 0(nao existe) ou 1(existe)
