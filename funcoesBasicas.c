@@ -63,6 +63,39 @@ float leValidaFloat(char *msg, char *msgErro, float valMin, float valMax){
 }
 
 /*
+	Objetivo: Ler um texto(string) utilizando alocacao dinamica
+	Parametros: nenhum
+	Retorno: endereco de memoria inicial do vetor de caracteres (string)
+*/
+char* leString(void){
+	char *texto=NULL, *textoAux;
+	char caractere;
+	int qtdCaracteres=0;
+	
+	LIMPA_BUFFER;
+	do{
+		caractere = getchar();
+		
+		textoAux = (char*) realloc(texto, sizeof(char)*(qtdCaracteres+1));
+		if(textoAux != NULL){
+			texto = textoAux;
+			
+			if(caractere != '\n'){
+				texto[qtdCaracteres] = caractere;
+			} else {
+				texto[qtdCaracteres] = '\0';
+			}
+			qtdCaracteres++;
+		} else {
+			break;
+		}
+		
+	}while(caractere != '\n');
+	
+	return texto;
+}
+
+/*
 	Objetivo: Ler e validar um texto
 	Parametros: endereco de memoria da string mensagem, mensagem de erro e do texto,
 		qtd minima e maxima de caracteres a serem permitidos
