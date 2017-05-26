@@ -33,7 +33,6 @@ int existeSerie(int identificadorSerie){
 	Retorno: a serie de exercicios obtida
 */
 SerieExercicio obtemSerie(int identificadorSerie){
-	int existe=0;
 	FILE *arqv;
 	SerieExercicio serieLida;
 	
@@ -43,7 +42,6 @@ SerieExercicio obtemSerie(int identificadorSerie){
 		while(!feof(arqv)){
 			if(fread(&serieLida, sizeof(SerieExercicio), 1, arqv) == 1){
 				if(serieLida.identificadorSerie == identificadorSerie){
-					existe = 1;
 					break;
 				}
 			}
@@ -226,7 +224,7 @@ void alteraDadosSeries(){
 			}
 		}
 		
-		if(fseek(arqv, -sizeof(SerieExercicio), SEEK_CUR) != 0){
+		if(fseek(arqv, -(sizeof(SerieExercicio)), SEEK_CUR) != 0){
 			printf("Erro na alteracao de dados\n");
 				
 			fclose(arqv);
