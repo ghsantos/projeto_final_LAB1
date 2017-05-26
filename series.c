@@ -104,7 +104,7 @@ void listaSerieExercicios(){
 */
 int leSerieExercicios(SerieExercicio *serie, int modo){
 
-	serie->identificadorSerie = leValidaInt("\nIdentificador da serie: ", "Identificador invalido", VAL_MIM_ID_SERIE, VAL_MAX_ID_SERIE);
+	serie->identificadorSerie = leValidaInt("\nIdentificador da serie: ", "\nIdentificador invalido\nTente novamente: ", VAL_MIM_ID_SERIE, VAL_MAX_ID_SERIE);
 	
 	if(existeSerie(serie->identificadorSerie)){
 		if(modo == 1){
