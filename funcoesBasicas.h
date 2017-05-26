@@ -5,6 +5,7 @@
 
 int leValidaInt(char *msg, char *msgErro, int valMin, int valMax);
 float leValidaFloat(char *msg, char *msgErro, float valMin, float valMax);
+char* leString(void);
 void leValidaTexto(char *msg, char *msgErro, char *texto, int tamMinTexto, int tamMaxTexto);
 void tiraTerminador(char *texto);
 char leValidaOpcao(char *msg, char *msgErro, char *opcoesValidas);
