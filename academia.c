@@ -1,6 +1,3 @@
-#include "definicoes.h"
-#include "estruturas.h"
-#include "funcoesBasicas.h"
 #include "academia.h"
 
 /*
