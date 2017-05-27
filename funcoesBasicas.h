@@ -1,6 +1,7 @@
 #ifndef FUNCOES_BASICAS_H
 #define FUNCOES_BASICAS_H
 
+#include "definicoes.h"
 #include "estruturas.h"
 
 int leValidaInt(char *msg, char *msgErro, int valMin, int valMax);
