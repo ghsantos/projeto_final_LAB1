@@ -1,16 +1,26 @@
 #ifndef FREQUENTADOR_H
 #define FREQUENTADOR_H
 
-void cadastraFrequentador(void);
+#include "definicoes.h"
+#include "estruturas.h"
+#include "funcoesBasicas.h"
+#include "academia.h"
+
+int obtemQtdFreqCadastrados(void);
 int obtemPosicaoFreqArq(int matriculaPesq);
-int gravaDadosFreqArq(Frequentador *frequentador);
+int obtemDadosFrequentador(Frequentador *frequentador, int posicaoFreqArq);
 void apresentaDadosFrequentadores(void);
-void alteraDadosFrequentador(void);
-int obtemDadosFrequentadorArq(Frequentador *frequentador, int posicaoFreqArq);
 void apresentaDadosFrequentador(Frequentador *frequentador);
-int gravaDadosFreqAlterados(Frequentador *frequentador, int posicaoFreqArq);
+
+void cadastraFrequentador(void);
+int gravaDadosFreqNovo(Frequentador *frequentador);
+
+void alteraDadosFrequentador(void);
+int modificaFrequentador(Frequentador *frequentador);
+int gravaDadosFreqAlterado(Frequentador *frequentador, int posicaoFreqArq);
+
 void excluiFrequentador(void);
-int removeFreqArq(int matriculaFreqExc);
 int verifFreqDevAtividades(int matriculaVerif);
+int removeDadosFreqArq(int matriculaFreqExc);
 
 #endif // FREQUENTADOR_H
