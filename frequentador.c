@@ -353,7 +353,7 @@ void excluiFrequentador(void){
 				if(opcaoDesejada == 'N'){
 					printf("\n\nNenhum frequentador foi excluido!");
 				} else {
-					// Verificando se o frequentador já executou alguma atividade na academia
+					// Verificando se o frequentador ja executou alguma atividade na academia
 					if(verifFreqDevAtividades(frequentador.matricula) == 1){
 						printf("\n\nEsse frequentador nao pode ser excluido!\n");
 						printf("Motivo: esse frequentador possui atividades cadastradas!");
