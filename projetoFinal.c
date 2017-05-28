@@ -71,6 +71,7 @@ int main(void){
 				break;
 				
 			case 'H':
+				excluiAtividade();
 				break;
 				
 			case 'Z':

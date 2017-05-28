@@ -14,6 +14,18 @@ int gravaAtividade(AtividadeDesenvolvida atividade);
 
 void cadastraAtividade();
 
+void printAtivddDesenv(AtividadeDesenvolvida atividade, int modo);
+
+void listaAtividades();
+
+int obtemQtdAtivCadastradas();
+
+int existeAividade(int identificadorSerie, int matriculaFrequentador);
+
+AtividadeDesenvolvida obtemAtividade(int identificadorSerie, int matriculaFrequentador);
+
 void excluiAtividade();
+
+int removeAtvddDesenvlvida(AtividadeDesenvolvida atividade);
 
 #endif	// ATIVIDADES
