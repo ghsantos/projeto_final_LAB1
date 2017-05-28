@@ -169,17 +169,17 @@ void cadastraNovaSerie(){
 */
 int obtemQtdSeriesCadastradas(){
 	FILE *arq;
-	int qtdAtividades=0;
+	int qtdSeries=0;
 	
-	arq = fopen(NOME_ARQ_ATIVDESEV, "rb");
+	arq = fopen(NOME_ARQ_SERIEEX, "rb");
 	if(arq != NULL){
 		if(fseek(arq, 0, SEEK_END) == 0){
-			qtdAtividades = ftell(arq) / sizeof(SerieExercicio);
+			qtdSeries = ftell(arq) / sizeof(SerieExercicio);
 		}
 		fclose(arq);
 	}
 	
-	return qtdAtividades;
+	return qtdSeries;
 }
 
 /*
