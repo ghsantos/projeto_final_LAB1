@@ -163,6 +163,26 @@ void cadastraNovaSerie(){
 }
 
 /*
+	Objetivo: obter a quantidade de series salvas na memoria
+	Parametros: nenhum
+	Retorno: quantidade de series salvas na memoria
+*/
+int obtemQtdSeriesCadastradas(){
+	FILE *arq;
+	int qtdAtividades=0;
+	
+	arq = fopen(NOME_ARQ_ATIVDESEV, "rb");
+	if(arq != NULL){
+		if(fseek(arq, 0, SEEK_END) == 0){
+			qtdAtividades = ftell(arq) / sizeof(SerieExercicio);
+		}
+		fclose(arq);
+	}
+	
+	return qtdAtividades;
+}
+
+/*
 	Objetivo: Alterar dados de uma serie de exercicios
 	Parametros: nenhum
 	Retorno: nenhum
@@ -172,7 +192,7 @@ void alteraDadosSeries(){
 	FILE *arqv;
 	char continuar;
 	
-	if(!verificaArqExiste(NOME_ARQ_SERIEEX)){
+	if(obtemQtdSeriesCadastradas() == 0){
 		printf("Nenhuma serie de exercicio cadastrada\n");
 		
 		continuarComEnter("\nPressione [Enter] para continuar...\n");
@@ -256,7 +276,7 @@ void excluirSeries(){
 	char continuar;
 	int identificador;
 	
-	if(!verificaArqExiste(NOME_ARQ_SERIEEX)){
+	if(obtemQtdSeriesCadastradas() == 0){
 		printf("Nenhuma serie de exercicio cadastrada\n");
 		
 		continuarComEnter("\nPressione [Enter] para continuar...\n");
