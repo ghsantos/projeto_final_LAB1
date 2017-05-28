@@ -133,6 +133,8 @@ void cadastraNovaSerie(){
 	FILE *arqv;
 	SerieExercicio serie;
 	
+	apresentaDadosAcademia();
+	
 	// A serie de exercicios ja existe
 	if(!leSerieExercicios(&serie, 1)){
 		printf("Serie ja cadastrada\n");
@@ -192,6 +194,10 @@ void alteraDadosSeries(){
 	FILE *arqv;
 	char continuar;
 	
+	apresentaDadosAcademia();
+	
+	printf("\n");
+	
 	if(obtemQtdSeriesCadastradas() == 0){
 		printf("Nenhuma serie de exercicio cadastrada\n");
 		
@@ -211,6 +217,10 @@ void alteraDadosSeries(){
 	}
 	
 	LIMPA_TELA;
+	
+	apresentaDadosAcademia();
+	
+	printf("\n");
 	
 	printSerieExercicio(serie, 1);
 	
@@ -276,6 +286,10 @@ void excluirSeries(){
 	char continuar;
 	int identificador;
 	
+	apresentaDadosAcademia();
+	
+	printf("\n");
+	
 	if(obtemQtdSeriesCadastradas() == 0){
 		printf("Nenhuma serie de exercicio cadastrada\n");
 		
@@ -299,6 +313,10 @@ void excluirSeries(){
 	serie = obtemSerie(identificador);
 
 	LIMPA_TELA;
+	
+	apresentaDadosAcademia();
+	
+	printf("\n");
 	
 	printSerieExercicio(serie, 1);
 	

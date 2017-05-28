@@ -70,6 +70,10 @@ int gravaAtividade(AtividadeDesenvolvida atividade){
 void cadastraAtividade(){
 	AtividadeDesenvolvida atividade;
 	
+	apresentaDadosAcademia();
+	
+	printf("\n");
+	
 	if(!verificaArqExiste(NOME_ARQ_FREQ)){
 		printf("Nenhum frequentador cadastrado\n");
 		
@@ -99,6 +103,10 @@ void cadastraAtividade(){
 	}
 	
 	LIMPA_TELA;
+	
+	apresentaDadosAcademia();
+	
+	printf("\n");
 	
 	listaSerieExercicios();
 	
@@ -263,6 +271,10 @@ void excluiAtividade(){
 	char continuar;
 	int identificadorSerie, matriculaFrequentador;
 	
+	apresentaDadosAcademia();
+	
+	printf("\n");
+	
 	if(obtemQtdAtivCadastradas() == 0){
 		printf("Nenhuma atividade de exercicio cadastrada\n");
 		
@@ -286,6 +298,10 @@ void excluiAtividade(){
 	}
 
 	LIMPA_TELA;
+	
+	apresentaDadosAcademia();
+	
+	printf("\n");
 	
 	atividade = obtemAtividade(identificadorSerie, matriculaFrequentador);
 
@@ -313,7 +329,6 @@ void excluiAtividade(){
 	Parametros: a struct da atividade a ser removida
 	Retorno: nenhum
 */
-
 int removeAtvddDesenvlvida(AtividadeDesenvolvida atividade){
 	FILE *arqv, *arqvAux;
 	int excluido=1;

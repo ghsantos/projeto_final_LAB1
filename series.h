@@ -1,6 +1,7 @@
 #ifndef SERIES_H
 #define SERIES_H
 
+#include "academia.h"
 #include "definicoes.h"
 #include "funcoesBasicas.h"
 #include "estruturas.h"
