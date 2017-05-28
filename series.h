@@ -18,6 +18,8 @@ int leSerieExercicios(SerieExercicio *serie, int modo);
 
 void cadastraNovaSerie();
 
+int obtemQtdSeriesCadastradas();
+
 void alteraDadosSeries();
 
 void excluirSeries();
