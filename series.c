@@ -97,7 +97,7 @@ void listaSerieExercicios(){
 /*
 	Objetivo: Ler uma serie de exercicios
 	Parametros: O endereco de uma struct de serie de exercicios e o modo de leitura
-			   ( 1 - ler para uma serie nao cadastrada, 2 - ler para uma serie ja cadastrada, 3 - ler apenas o identificador)
+			   ( 1 - ler para uma serie nao cadastrada, 2 - ler para uma serie ja cadastrada)
 	Retorno:  1 se a serie foi lida, 0 se nao
 */
 int leSerieExercicios(SerieExercicio *serie, int modo){
@@ -107,11 +107,9 @@ int leSerieExercicios(SerieExercicio *serie, int modo){
 	if(existeSerie(serie->identificadorSerie)){
 		if(modo == 1){
 			return 0;
-		} else if(modo == 3){
-			return 1;
 		}
 	} else{
-		if(modo == 2 || modo == 3){
+		if(modo == 2){
 			return 0;
 		}
 	}
@@ -256,6 +254,7 @@ void excluirSeries(){
 	SerieExercicio serie, serieLida;
 	FILE *arqv, *arqvAux;
 	char continuar;
+	int identificador;
 	
 	if(!verificaArqExiste(NOME_ARQ_SERIEEX)){
 		printf("Nenhuma serie de exercicio cadastrada\n");
@@ -266,8 +265,10 @@ void excluirSeries(){
 	}
 
 	listaSerieExercicios();
+	
+	identificador = leValidaInt("\nIdentificador da serie: ", "\nIdentificador invalido\nTente novamente: ", VAL_MIM_ID_SERIE, VAL_MAX_ID_SERIE);
 
-	if(!leSerieExercicios(&serie, 3)){
+	if(!existeSerie(identificador)){
 		printf("Identificador inexistente\n");
 	
 		continuarComEnter("\nPressione [Enter] para continuar...\n");
@@ -275,7 +276,7 @@ void excluirSeries(){
 		return;
 	}
 	
-	serie = obtemSerie(serie.identificadorSerie);
+	serie = obtemSerie(identificador);
 
 	LIMPA_TELA;
 	
