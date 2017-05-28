@@ -7,7 +7,6 @@
 */
 int obtemQtdFreqCadastrados(void){
 	FILE *arq;
-	Frequentador frequentador;
 	int qtdFrequentadores=0;
 	
 	arq = fopen(NOME_ARQ_FREQ, "rb");
