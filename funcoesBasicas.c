@@ -191,6 +191,47 @@ void toUpperStr(char *str){
 }
 
 /*
+	Objetivo: verificar a existencia de uma substring em uma string ignorando case
+	Parâmetros: o endereco de uma string e de uma substring
+ 	retorno: 1 caso a substring exista na string ou 0, caso nao
+*/
+int strcasestrLAB(const char *texto, const char *pesqsa){
+	int existe=0, cont;
+
+	char *str, *find;
+	
+	str = (char *) malloc(sizeof(char) * strlen(texto));
+	
+	if(str != NULL){
+		find = (char *) malloc(sizeof(char) * strlen(pesqsa));
+
+		if(find != NULL){
+			for(cont=0; cont < strlen(texto); ++cont){
+				str[cont] = toupper(texto[cont]);
+			}
+
+			str[cont] = '\0';
+
+			for(cont=0; cont < strlen(pesqsa); ++cont){
+				find[cont] = toupper(pesqsa[cont]);
+			}
+
+			find[cont] = '\0';
+
+			if(strstr(str, find) != NULL){
+				existe = 1;
+			}
+		
+			free(find);
+		}
+		
+		free(str);
+	}
+
+	return existe;
+}
+
+/*
 	Objetivo: Gerar um nro inteiro aleatorio
 	Parametros: valor minimo e maximo permitido
 	Retorno: nro aleatorio
