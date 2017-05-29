@@ -7,25 +7,17 @@
 #include "frequentador.h"
 #include "series.h"
 
-
+void apresentaDadosAtivsDesenvolvidas(void);
+void apresentaDadosAtivDesenvolvida(AtividadeDesenvolvida *ativDesenvolvida);
+int obtemQtdAtivDesevCadastradas(void);
 int fezAtividadeHoje(AtividadeDesenvolvida atividade);
+int obtemPosicaoAtivDesenvArq(int matricFreqPesq, int idSerieExPesq);
+int obtemDadosAtivDesenvolvida(AtividadeDesenvolvida *ativDesenvolvida, int posicaAtivDesevArq);
 
-int gravaAtividade(AtividadeDesenvolvida atividade);
+void cadastraAtivDesenvolvida(void);
+int gravaDadosAtivDesenvolvidaArq(AtividadeDesenvolvida *ativDesenvolvida);
 
-void cadastraAtividade();
-
-void printAtivddDesenv(AtividadeDesenvolvida atividade, int modo);
-
-void listaAtividades();
-
-int obtemQtdAtivCadastradas();
-
-int existeAividade(int identificadorSerie, int matriculaFrequentador);
-
-AtividadeDesenvolvida obtemAtividade(int identificadorSerie, int matriculaFrequentador);
-
-void excluiAtividade();
-
-int removeAtvddDesenvlvida(AtividadeDesenvolvida atividade);
+void excluiAtivDesenvolvida(void);
+int removeDadosAtivDesevArq(int matricFreqPesq, int idSerieExPesq);
 
 #endif	// ATIVIDADES
