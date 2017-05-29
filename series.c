@@ -121,7 +121,6 @@ void apresentaDadosSerieEx(SerieExercicio *serieExercicio){
 */
 void cadastraSerieEx(void){
 	SerieExercicio serieExercicio;
-	int idSerieRepetido;
 	
 	apresentaDadosAcademia();
 	
