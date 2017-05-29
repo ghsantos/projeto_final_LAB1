@@ -20,7 +20,7 @@ int modificaFrequentador(Frequentador *frequentador);
 int gravaDadosFreqAlterado(Frequentador *frequentador, int posicaoFreqArq);
 
 void excluiFrequentador(void);
-int verifFreqDevAtividades(int matriculaVerif);
+int verifFreqExecutouAtividades(int matriculaVerif);
 int removeDadosFreqArq(int matriculaFreqExc);
 
 #endif // FREQUENTADOR_H
