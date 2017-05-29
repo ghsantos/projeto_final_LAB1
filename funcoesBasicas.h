@@ -11,6 +11,7 @@ void leValidaTexto(char *msg, char *msgErro, char *texto, int tamMinTexto, int t
 void tiraTerminador(char *texto);
 char leValidaOpcao(char *msg, char *msgErro, char *opcoesValidas);
 int verifCPFValido(char *cpf);
+int verifDataValida(Data dataVerif);
 void toLowerStr(char *str);
 void toUpperStr(char *str);
 int strcasestrLAB(const char *texto, const char *pesqsa);
