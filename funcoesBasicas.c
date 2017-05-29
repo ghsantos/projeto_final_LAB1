@@ -147,21 +147,119 @@ char leValidaOpcao(char *msg, char *msgErro, char *opcoesValidas){
 }
 
 /*
-	Objetivo: Verificar se um nro de CPF e valido
-	Parametros: endereco de memoria da string com o CPF
-	Retorno: 0(invalido) ou 1(valido)
+	Objetivo: Validar um CPF
+	Parametros: endereco de memoria inicial da string CPF
+	Retorno: 0(CPF invalido) ou 1(CPF valido)
 */
 int verifCPFValido(char *cpf){
-	int cont;
+	int cpfInt[11];
+	int soma=0, digVerif[2], cont, contAux;
 	
-	// Verificando se foi digitado apenas nros
-	for(cont=0; cont<strlen(cpf); cont++){
-		if(!isdigit(cpf[cont])){
+	// Lista dos cpfs invalidos mais comuns
+	char *cpfInval[] = {"11111111111", "22222222222", "33333333333",
+                         "44444444444", "55555555555", "66666666666",
+                         "77777777777", "88888888888", "99999999999"};
+    
+    
+    // Verificando se o tamanho do CPF e valido
+    if(strlen(cpf) != 11){
+    	return 0;
+	}
+	
+	// Verificando se o CPF so tem nros iguais
+	for(cont=0; cont<9; cont++){
+		if(strcmp(cpfInval[cont], cpf) == 0){
 			return 0;
 		}
 	}
 	
-	return 1;
+	// Transformando os caracteres do CPF em nros
+	for(cont=0; cont<strlen(cpf); cont++){
+		cpfInt[cont] = cpf[cont] - '0';
+	}
+	
+	// Obtendo o primeiro digito verificador
+	contAux=10;
+	for(cont=0;cont<9;cont++,contAux--){
+		soma += cpfInt[cont] * contAux;
+	}
+	digVerif[0]=soma % 11;
+	digVerif[0]= digVerif[0]<2 ? 0 : 11-digVerif[0];
+	
+	// Obtendo o segundo digito verificador
+	soma=0;
+	contAux=11;
+	for(cont=0;cont<10;cont++,contAux--){
+		if(cont==9){
+			soma += digVerif[0] * contAux;
+		} else {
+			soma+= cpfInt[cont] * contAux;
+		}
+	}
+	digVerif[1]=soma % 11;
+	digVerif[1]= digVerif[1]<2 ? 0 : 11-digVerif[1];
+	
+		
+	// Verificando se os digitos verificadores sao validos
+	if(digVerif[0] == cpfInt[9] && digVerif[1] == cpfInt[10]){
+		// CPF valido
+		return 1;
+	} else {
+		// CPF invalido
+		return 0;
+	}
+}
+
+/*
+	Objetivo: Verificar se uma data e valida
+	Parametros: dia, mes e ano
+	Retorno: 0(data invalida) ou 1(data valida)
+*/
+int verifDataValida(Data dataVerif){
+	Data dataAux = obtemDataSistema();
+	int dataValida=1;
+	
+	// Vericando se o dia, mes e ano esta nos intervalos numericos basicos de datas
+    if(dataVerif.ano<0 || dataVerif.ano > dataAux.ano || dataVerif.mes<1 || dataVerif.mes >12 || dataVerif.dia >31){
+    	return 0;
+	}
+	
+	// Verificando se a data informada e maior que a data do sistema
+	if(dataVerif.ano == dataAux.ano){
+		if(dataVerif.mes > dataAux.mes){
+			return 0;
+		} else if(dataVerif.mes == dataAux.mes && dataVerif.dia > dataAux.dia){
+			return 0;
+		}
+	}
+    
+    switch(dataVerif.mes){
+       // Verificando os meses de 30 dias
+	   case 4:
+       case 6:
+       case 9:
+       case 11:
+            if(dataVerif.dia > 30){
+            	dataValida=0;
+			}
+            break;
+            
+       case 2:
+       		// Verificando a validade dos anos bissextos
+            if((dataVerif.ano%4 == 0 && dataVerif.ano %100 !=0) ||(dataVerif.ano % 400 == 0)){
+            	if(dataVerif.dia >29){
+               		dataValida = 0;
+				}
+				
+            } else {
+            	if(dataVerif.dia >28){
+            		dataValida =0;
+				}  
+            }
+            break;      
+    }
+    
+    return dataValida;
 }
 
 /*
