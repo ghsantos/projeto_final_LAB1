@@ -320,5 +320,7 @@ void apresentaOpcoesMenu(void){
 	printf("G - Cadastrar nova\n");
 	printf("H - Excluir\n\n");
 	
+	printf("I - Gerar relatorios\n\n");
+	
 	printf("Z - Encerrar o programa\n\n");
 }
