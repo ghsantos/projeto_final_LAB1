@@ -232,6 +232,45 @@ int strcasestrLAB(const char *texto, const char *pesqsa){
 }
 
 /*
+	Objetivo: comparar duas strings ignorando case
+	Parâmetros: o endereco de duas strings
+ 	retorno: o valor da diferenca entre as strings
+*/
+int strcasecmpLAB(const char *texto1, const char *texto2){
+	int comparacao=0, cont;
+
+	char *str1, *str2;
+	
+	str1 = (char *) malloc(sizeof(char) * strlen(texto1));
+	
+	if(str1 != NULL){
+		str2 = (char *) malloc(sizeof(char) * strlen(texto2));
+
+		if(str2 != NULL){
+			for(cont=0; cont < strlen(texto1); ++cont){
+				str1[cont] = toupper(texto1[cont]);
+			}
+
+			str1[cont] = '\0';
+
+			for(cont=0; cont < strlen(texto2); ++cont){
+				str2[cont] = toupper(texto2[cont]);
+			}
+
+			str2[cont] = '\0';
+
+			comparacao = strcmp(str1, str2);
+		
+			free(str2);
+		}
+		
+		free(str1);
+	}
+
+	return comparacao;
+}
+
+/*
 	Objetivo: Gerar um nro inteiro aleatorio
 	Parametros: valor minimo e maximo permitido
 	Retorno: nro aleatorio

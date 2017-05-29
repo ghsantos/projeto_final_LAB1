@@ -13,6 +13,8 @@ char leValidaOpcao(char *msg, char *msgErro, char *opcoesValidas);
 int verifCPFValido(char *cpf);
 void toLowerStr(char *str);
 void toUpperStr(char *str);
+int strcasestrLAB(const char *texto, const char *pesqsa);
+int strcasecmpLAB(const char *texto1, const char *texto2);
 int geraNroIntAleatorio(int valMin, int valMax);
 Data obtemDataSistema(void);
 Horario obtemHoraSistema(void);
