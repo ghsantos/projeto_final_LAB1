@@ -64,8 +64,7 @@ int cadastraAcademia(void){
 	// Tentando gravar os dados da academia em um arquivo de saida
 	if(gravaArqDadosAcademia(&academia) == 1){
 		printf("\n\nDados gravados com sucesso!");
-		printf("\n\nPressione 'Enter' para continuar...");
-		getchar();
+		continuarComEnter("\n\nPressione [Enter] para continuar...");
 		cadastroConcluido=1;
 	}
 	
