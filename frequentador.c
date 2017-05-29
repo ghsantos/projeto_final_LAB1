@@ -85,11 +85,12 @@ void apresentaDadosFrequentadores(void){
 	
 	arq = fopen(NOME_ARQ_FREQ, "rb");
 	if(arq != NULL){
-		printf("%-10.10s%-15.15s%-13.13s%s\n", "Matricula", "Nome", "CPF", "Sexo");
+		printf("%-10.10s%-15.15s%-13.13s%-11.11s%s\n", "Matricula", "Nome", "CPF", "Sexo", "Peso (kg)");
 		while(feof(arq) == 0){
 			if(fread(&frequentador, sizeof(Frequentador), 1, arq) == 1){
 				printf("%-10d%-14.14s %-13.13s", frequentador.matricula, frequentador.nome, frequentador.cpf);
-				printf("%s\n", frequentador.sexo == 'M' ? "Masculino" : "Feminino");
+				printf("%-11.11s", frequentador.sexo == 'M' ? "Masculino" : "Feminino");
+				printf("%.2f\n", frequentador.peso);
 				existeFreq=1;
 			}
 		}
@@ -142,7 +143,7 @@ void cadastraFrequentador(void){
 		cpfValido = verifCPFValido(frequentador.cpf);
 		
 		if(cpfValido == 0){
-			printf("CPF invalido! Digite apenas os nros.\n");
+			printf("CPF invalido! Digite novamente!\n");
 		}
 	}while(cpfValido == 0);
 	
@@ -192,7 +193,7 @@ int gravaDadosFreqNovo(Frequentador *frequentador){
 */
 void alteraDadosFrequentador(void){
 	Frequentador frequentador;
-	int matriculaPesq, posicaoFreqArq;
+	int posicaoFreqArq;
 	
 	apresentaDadosAcademia();
 	
@@ -202,10 +203,10 @@ void alteraDadosFrequentador(void){
 	} else {
 		printf("\n\n");
 		apresentaDadosFrequentadores();
-		matriculaPesq = leValidaInt("\n\nMatricula do frequentador a ser alterado: ", "Matricula invalida... Digite novamente: ", VAL_MIN_MATRIC_FREQ, VAL_MAX_MATRIC_FREQ);
+		frequentador.matricula = leValidaInt("\n\nMatricula do frequentador a ser alterado: ", "Matricula invalida... Digite novamente: ", VAL_MIN_MATRIC_FREQ, VAL_MAX_MATRIC_FREQ);
 		
 		// Verificando se a matricula existe
-		posicaoFreqArq = obtemPosicaoFreqArq(matriculaPesq);
+		posicaoFreqArq = obtemPosicaoFreqArq(frequentador.matricula);
 		if(posicaoFreqArq == 0){
 			printf("\n\nNao foi encontrado nenhum frequentador com essa matricula!");
 		} else {
@@ -238,7 +239,7 @@ void alteraDadosFrequentador(void){
 */
 int modificaFrequentador(Frequentador *frequentador){
 	char opcaoDesejada;
-	int dadosModificados=0;
+	int dadosModificados=0, dadoValido;
 	
 	LIMPA_TELA;
 	apresentaDadosAcademia();
@@ -263,7 +264,14 @@ int modificaFrequentador(Frequentador *frequentador){
 			}
 				
 			case 'C':{
-				
+				do{
+					leValidaTexto("\nNovo CPF (apenas nros): ", "CPF invalido... Digite os 11 digitos: ", frequentador->cpf, (TAM_CPF-1), TAM_CPF);
+					dadoValido = verifCPFValido(frequentador->cpf);
+					
+					if(dadoValido == 0){
+						printf("CPF invalido! Digite novamente!\n");
+					}
+				}while(dadoValido == 0);
 				break;
 			}
 			
@@ -278,6 +286,17 @@ int modificaFrequentador(Frequentador *frequentador){
 			}
 			
 			case 'D':{
+				do{
+					printf("\nNova data de ingresso\n");
+					frequentador->dataIngresso.dia = leValidaInt("Dia: ", "Dia invalido... Digite novamente: ", 1, 31);
+					frequentador->dataIngresso.mes = leValidaInt("\nMes: ", "Mes invalido... Digite novamente: ", 1, 12);
+					frequentador->dataIngresso.ano = leValidaInt("\nAno: ", "Ano invalido... Digite novamente: ", 1901, 2037);
+					dadoValido = verifDataValida(frequentador->dataIngresso);
+					
+					if(dadoValido == 0){
+						printf("\nData invalida... Digite novamente!");
+					}
+				}while(dadoValido == 0);
 				
 				break;
 			}
@@ -322,7 +341,7 @@ int gravaDadosFreqAlterado(Frequentador *frequentador, int posicaoFreqArq){
 */
 void excluiFrequentador(void){
 	Frequentador frequentador;
-	int matriculaPesq, posicaoFreqArq;
+	int posicaoFreqArq;
 	char opcaoDesejada;
 	
 	
@@ -333,10 +352,10 @@ void excluiFrequentador(void){
 	} else {
 		printf("\n\n");
 		apresentaDadosFrequentadores();
-		matriculaPesq = leValidaInt("\n\nMatricula do frequentador a ser excluido: ", "Matricula invalida... Digite novamente: ", VAL_MIN_MATRIC_FREQ, VAL_MAX_MATRIC_FREQ);
+		frequentador.matricula = leValidaInt("\n\nMatricula do frequentador a ser excluido: ", "Matricula invalida... Digite novamente: ", VAL_MIN_MATRIC_FREQ, VAL_MAX_MATRIC_FREQ);
 		
 		// Verificando se a matricula existe
-		posicaoFreqArq = obtemPosicaoFreqArq(matriculaPesq);
+		posicaoFreqArq = obtemPosicaoFreqArq(frequentador.matricula);
 		if(posicaoFreqArq == 0){
 			printf("\n\nNao foi encontrado nenhum frequentador com essa matricula!");
 		} else {
