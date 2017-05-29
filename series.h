@@ -6,23 +6,22 @@
 #include "funcoesBasicas.h"
 #include "estruturas.h"
 
+int obtemQtdSeriesCadastradas(void);
+int obtemPosicaoSerieArq(int identificadorSeriePesq);
+int obtemDadosSerieEx(SerieExercicio *serieExercicio, int posicaoSerieArq);
+void apresentaDadosSeriesExs(void);
+void apresentaDadosSerieEx(SerieExercicio *serieExercicio);
 
+void cadastraSerieEx(void);
 int existeSerie(int identificadorSerie);
+int gravaDadosSerieNova(SerieExercicio *serieExercicio);
 
-SerieExercicio obtemSerie(int identificadorSerie);
+void alteraDadosSerieEx(void);
+int modificaSerieEx(SerieExercicio *serieExercicio);
+int gravaDadosSerieAlterada(SerieExercicio *serieExercicio, int posicaoSerieArq);
 
-void printSerieExercicio(SerieExercicio serie, int modo);
-
-void listaSerieExercicios();
-
-int leSerieExercicios(SerieExercicio *serie, int modo);
-
-void cadastraNovaSerie();
-
-int obtemQtdSeriesCadastradas();
-
-void alteraDadosSeries();
-
-void excluirSeries();
+void excluiSerieEx(void);
+int verifSerieJaFoiExecutada(int identificadorSeriePesq);
+int removeDadosSerieArq(int identificadorSerieExc);
 
 #endif	// SERIES_H
