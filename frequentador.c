@@ -53,7 +53,7 @@ int obtemPosicaoFreqArq(int matriculaPesq){
 	Objetivo: Obter os dados de um frequentador a partir da sua posicao dentro de um arquivo de entrada
 	Parametros: endereco de memoria da struct(frequentador) que vai armazenar os dados, posicao dos dados
 		do frequentador no arquivo
-	Retorno: 0(os dados nao foram recuperador) ou 1(os dados foram recuperados com exito)
+	Retorno: 0(os dados nao foram recuperados) ou 1(os dados foram recuperados com exito)
 */
 int obtemDadosFrequentador(Frequentador *frequentador, int posicaoFreqArq){
 	FILE *arq;
@@ -353,7 +353,7 @@ void excluiFrequentador(void){
 					printf("\n\nNenhum frequentador foi excluido!");
 				} else {
 					// Verificando se o frequentador ja executou alguma atividade na academia
-					if(verifFreqDevAtividades(frequentador.matricula) == 1){
+					if(verifFreqExecutouAtividades(frequentador.matricula) == 1){
 						printf("\n\nEsse frequentador nao pode ser excluido!\n");
 						printf("Motivo: esse frequentador possui atividades cadastradas!");
 					} else {
@@ -379,7 +379,7 @@ void excluiFrequentador(void){
 	Parametros: matricula do frequentador
 	Retorno: 0(nao existem atividades cadastradas) ou 1(ja executou alguma atividade)
 */
-int verifFreqDevAtividades(int matriculaVerif){
+int verifFreqExecutouAtividades(int matriculaVerif){
 	AtividadeDesenvolvida ativDesenvolvida;
 	FILE *arq;
 	int jaDesenvolveuAtiv=0;
@@ -410,8 +410,8 @@ int removeDadosFreqArq(int matriculaFreqExc){
 	int remocaoConcluida=1;
 	
 	arq = fopen(NOME_ARQ_FREQ, "rb");
-	arqAux = fopen("arqFreqAux.bin", "wb");
 	if(arq != NULL){
+		arqAux = fopen("arqFreqAux.bin", "wb");
 		if(arqAux != NULL){
 			while(feof(arq) == 0){
 				if(fread(&frequentador, sizeof(Frequentador), 1, arq) == 1){
