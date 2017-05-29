@@ -1,6 +1,156 @@
 #include "series.h"
 
 /*
+	Objetivo: Obter a qtd de series de exercicios cadastradas
+	Parametros: nenhum
+	Retorno: qtd de series cadastradas
+*/
+int obtemQtdSeriesCadastradas(void){
+	FILE *arq;
+	int qtdSeries=0;
+	
+	arq = fopen(NOME_ARQ_SERIEEX, "rb");
+	if(arq != NULL){
+		if(fseek(arq, 0, SEEK_END) == 0){
+			qtdSeries = ftell(arq) / sizeof(SerieExercicio);
+		}
+		fclose(arq);
+	}
+	
+	return qtdSeries;
+}
+
+/*
+	Objetivo: Obter a posicao dos dados de uma serie de exercicio dentro
+		de um arquivo de entrada
+	Parametros: codigo identificador da serie
+	Retorno: 0(se nada foi encontrado) ou o nro correspondente a posicao da serie
+*/
+int obtemPosicaoSerieArq(int identificadorSeriePesq){
+	SerieExercicio serieExercicio;
+	FILE *arq;
+	int contSeries=0, posicaoSerieArq=0;
+	
+	arq = fopen(NOME_ARQ_SERIEEX, "rb");
+	if(arq != NULL){
+		while(feof(arq) == 0){
+			if(fread(&serieExercicio, sizeof(SerieExercicio), 1, arq) == 1){
+				contSeries++;
+				if(serieExercicio.identificadorSerie == identificadorSeriePesq){
+					posicaoSerieArq = contSeries;
+					break;
+				}
+			}
+		}
+		
+		fclose(arq);
+	}
+	
+	return posicaoSerieArq;
+}
+
+/*
+	Objetivo: Obter os dados de uma serie de exercicios a partir da posicao do seus dados
+		em um arquivo de entrada
+	Parametros: endereco de memoria da struct(serie de exercicios) que vai armazenar os dados,
+		posicao dos dados da serie no arquivo de entrada
+	Retorno: 0(os dados nao foram recuperados) ou 1(os dados foram recuperados)
+*/
+int obtemDadosSerieEx(SerieExercicio *serieExercicio, int posicaoSerieArq){
+	FILE *arq;
+	int serieExEncontrada=0;
+	
+	arq = fopen(NOME_ARQ_SERIEEX, "rb");
+	if(arq != NULL){
+		if(fseek(arq, sizeof(SerieExercicio)*(posicaoSerieArq-1), SEEK_SET) == 0){
+			if(fread(serieExercicio, sizeof(SerieExercicio), 1, arq) == 1){
+				serieExEncontrada=1;
+			}
+		}
+		
+		fclose(arq);
+	}
+	
+	return serieExEncontrada;
+}
+
+/*
+	Objetivo: Apresentar os dados de todas as series de exercicios cadastradas
+	Parametros: nenhum
+	Retorno: nenhum
+*/
+void apresentaDadosSeriesExs(void){
+	FILE *arq;
+	SerieExercicio serieExercicio;
+	int existeSeriesEx=0;
+	
+	arq = fopen(NOME_ARQ_SERIEEX, "rb");
+	if(arq != NULL){
+		printf("%-15.15s%-15.15s %-15.15s%s\n", "Identificador", "Descricao", "Duracao (min)", "Qtd de calorias perdidas");
+		while(feof(arq) == 0){
+			if(fread(&serieExercicio, sizeof(SerieExercicio), 1, arq) == 1){
+				printf("%-15d%-15.15s %-15d%d\n", serieExercicio.identificadorSerie, serieExercicio.descricao, serieExercicio.duracao, serieExercicio.qtdCaloriasPerdidas);
+				existeSeriesEx=1;
+			}
+		}
+		
+		fclose(arq);
+	}
+	
+	if(existeSeriesEx==0){
+		printf("\n\nNao existem series de exercicios cadastradas!");
+	}
+}
+
+/*
+	Objetivo: Apresentar os dados de uma serie de exercicio especifica
+	Parametros: endereco de memoria da struct(serie) com os dados a serem exibidos
+	Retorno: nenhum
+*/
+void apresentaDadosSerieEx(SerieExercicio *serieExercicio){
+	printf("\nIdentificador: %d\n", serieExercicio->identificadorSerie);
+	printf("Descricao: %s\n", serieExercicio->descricao);
+	printf("Duracao prevista em minutos: %d\n", serieExercicio->duracao);
+	printf("Qtd de calorias a serem perdidas: %d\n", serieExercicio->qtdCaloriasPerdidas);
+}
+
+/*
+	Objetivo: Cadastrar uma nova serie de exercicios
+	Parametros: nenhum
+	Retorno: nenhum
+*/
+void cadastraSerieEx(void){
+	SerieExercicio serieExercicio;
+	int idSerieRepetido;
+	
+	apresentaDadosAcademia();
+	
+	// Coletando o codigo identificador da serie
+	serieExercicio.identificadorSerie = leValidaInt("\n\nCod. Identificador da serie: ", "Identificador invalido... Digite novamente: ", VAL_MIN_ID_SERIE, VAL_MAX_ID_SERIE);
+	
+	// Verificando se o codigo identificador da serie da foi cadastrado
+	if(existeSerie(serieExercicio.identificadorSerie) == 1){
+		printf("\n\nEssa serie ja foi cadastrada!");
+	} else {
+		// Coletando a descricao
+		leValidaTexto("\nDescricao: ", "Descricao invalida... Digite novamente: ", serieExercicio.descricao, TAM_MIN_DESCRICAO_SERIE, TAM_MAX_DESCRICAO_SERIE);
+		
+		// Coletando o duracao prevista em minutos e a qtd de calorias a serem perdidas
+		serieExercicio.duracao = leValidaInt("\nDuracao (minutos): ", "Duracao invalida... Digite novamente: ", VAL_MIN_DURACAO_SERIE, VAL_MAX_DURACAO_SERIE);
+		serieExercicio.qtdCaloriasPerdidas = leValidaInt("\nQuantidade de calorias a serem perdidas: ", "Quantidade invalida... Digite novamente: ", VAL_MIN_CAL_PERDIDAS, VAL_MAX_CAL_PERDIDAS);
+		
+		// Tentando gravar os dados da nova serie em um arquivo de saida
+		if(gravaDadosSerieNova(&serieExercicio) == 0){
+			printf("\n\nErro ao tentar cadastrar a serie de exercicio!");
+		} else {
+			printf("\n\nSerie de exercicio cadastrada com sucesso!");
+		}
+	}
+	
+	continuarComEnter("\n\nPressione [Enter] para continuar...");
+}
+
+/*
 	Objetivo: Verificar se uma serie de exercicios exixte
 	Parametros: Uma struct de serie de exercicios
 	Retorno: 1 a serie existe, 0 nao
@@ -10,8 +160,7 @@ int existeSerie(int identificadorSerie){
 	FILE *arqv;
 	SerieExercicio serieLida;
 	
-	arqv = fopen(NOME_ARQ_SERIEEX, "rb");	
-	
+	arqv = fopen(NOME_ARQ_SERIEEX, "rb");
 	if(arqv != NULL){
 		while(!feof(arqv)){
 			if(fread(&serieLida, sizeof(SerieExercicio), 1, arqv) == 1){
@@ -28,346 +177,276 @@ int existeSerie(int identificadorSerie){
 }
 
 /*
-	Objetivo: Obter uma serie de exercicios de um arquivo a partir de um identificador
-	Parametros: identificador
-	Retorno: a serie de exercicios obtida
+	Objetivo: Gravar os dados de uma nova serie de exercicios em arquivo de saida
+	Parametros: endereco de memoria da struct com os dados da serie a ser gravada
+	Retorno: 0(ocorreu erros na gravacao) ou 1(gravacao concluida com sucesso)
 */
-SerieExercicio obtemSerie(int identificadorSerie){
-	FILE *arqv;
-	SerieExercicio serieLida;
-	
-	arqv = fopen(NOME_ARQ_SERIEEX, "rb");	
-	
-	if(arqv != NULL){
-		while(!feof(arqv)){
-			if(fread(&serieLida, sizeof(SerieExercicio), 1, arqv) == 1){
-				if(serieLida.identificadorSerie == identificadorSerie){
-					break;
-				}
-			}
-		}
-		fclose(arqv);
-	}
-	
-	return serieLida;
-}
-
-/*
-	Objetivo: exibir uma serie de exercicios e o cabecalho se o modo for 1
-	Parametros: Uma struct de serie de exercicios e o modo de exibicao
-	Retorno: nenhum
-*/
-void printSerieExercicio(SerieExercicio serie, int modo){
-
-	if(modo == 1){
-		printf(" Identificador |             Descricao | Duracao | Qtd calorias a serem perdidas\n");
-	}
-
-	printf(" %13d | %21.21s | %7d | %5d\n", serie.identificadorSerie,
-		   serie.descricao, serie.duracao, serie.qtdCaloriasPerdidas);
-}
-
-/*
-	Objetivo: Listar as series de exercicios salvas na memoria
-	Parametros: nenhum
-	Retorno: nenhum
-*/
-void listaSerieExercicios(){
-	FILE *arqv;
-	SerieExercicio serie;
-	int cont=0;
-
-	arqv = fopen(NOME_ARQ_SERIEEX, "rb");
-	
-	if(arqv != NULL){
-		
-		printf("Series de exercicios\n");
-	
-		while(!feof(arqv)){
-			if(fread(&serie, sizeof(SerieExercicio), 1, arqv) == 1){
-				printSerieExercicio(serie, cont+1);
-				
-				++cont;
-			}
-		}
-		fclose(arqv);
-	}
-}
-
-/*
-	Objetivo: Ler uma serie de exercicios
-	Parametros: O endereco de uma struct de serie de exercicios e o modo de leitura
-			   ( 1 - ler para uma serie nao cadastrada, 2 - ler para uma serie ja cadastrada)
-	Retorno:  1 se a serie foi lida, 0 se nao
-*/
-int leSerieExercicios(SerieExercicio *serie, int modo){
-
-	serie->identificadorSerie = leValidaInt("\nIdentificador da serie: ", "\nIdentificador invalido\nTente novamente: ", VAL_MIM_ID_SERIE, VAL_MAX_ID_SERIE);
-	
-	if(existeSerie(serie->identificadorSerie)){
-		if(modo == 1){
-			return 0;
-		}
-	} else{
-		if(modo == 2){
-			return 0;
-		}
-	}
-	
-	leValidaTexto("Descricao: ", "Descricao invalida\nTente novamente: ", serie->descricao, TAM_MIN_DESCRICAO_SERIE, TAM_DESCRICAO_SERIE);
-
-	serie->duracao = leValidaInt("Duracao (minutos): ", "Valor invalido\nTente novamente: ", VAL_MIM_DURACAO_SERIE, VAL_MAX_DURACAO_SERIE);
-	
-	serie->qtdCaloriasPerdidas = leValidaInt("Quantidade de calorias a serem perdidas: ", "Quantidade invalida\nTente novamente: ", VAL_MIM_CAL_PERDIDAS, VAL_MAX_CAL_PERDIDAS);
-	
-	return 1;
-}
-
-/*
-	Objetivo: Cadastrar uma nova serie de exercicios
-	Parametros: nenhum
-	Retorno: nenhum
-*/
-void cadastraNovaSerie(){
-
-	FILE *arqv;
-	SerieExercicio serie;
-	
-	apresentaDadosAcademia();
-	
-	// A serie de exercicios ja existe
-	if(!leSerieExercicios(&serie, 1)){
-		printf("Serie ja cadastrada\n");
-		
-		continuarComEnter("\nPressione [Enter] para continuar...\n");
-		
-		return;
-	}
-	
-	if(verificaArqExiste(NOME_ARQ_SERIEEX)){
-		arqv = fopen(NOME_ARQ_SERIEEX, "ab+");
-	} else{
-		arqv = fopen(NOME_ARQ_SERIEEX, "wb+");
-	}
-	
-	if(arqv != NULL){
-		if(fwrite(&serie, sizeof(SerieExercicio), 1, arqv) == 1){
-			printf("\n\nSerie cadastrada com sucesso!");
-		} else {
-			printf("\n\nErro ao tentar cadastrar Serie !");
-		}
-	
-		continuarComEnter("\nPressione [Enter] para continuar...\n");
-	
-		fclose(arqv);
-	}
-
-}
-
-/*
-	Objetivo: obter a quantidade de series salvas na memoria
-	Parametros: nenhum
-	Retorno: quantidade de series salvas na memoria
-*/
-int obtemQtdSeriesCadastradas(){
+int gravaDadosSerieNova(SerieExercicio *serieExercicio){
+	int gravacaoConcluida=0;
 	FILE *arq;
-	int qtdSeries=0;
 	
-	arq = fopen(NOME_ARQ_SERIEEX, "rb");
+	arq = fopen(NOME_ARQ_SERIEEX, "ab");
 	if(arq != NULL){
-		if(fseek(arq, 0, SEEK_END) == 0){
-			qtdSeries = ftell(arq) / sizeof(SerieExercicio);
+		if(fwrite(serieExercicio, sizeof(SerieExercicio), 1, arq) == 1){
+			gravacaoConcluida=1;
 		}
+		
 		fclose(arq);
 	}
 	
-	return qtdSeries;
+	return gravacaoConcluida;
 }
 
+
 /*
-	Objetivo: Alterar dados de uma serie de exercicios
+	Objetivo: Alterar os dados de uma serie de exercicio (com excecao do codigo identificador)
 	Parametros: nenhum
 	Retorno: nenhum
 */
-void alteraDadosSeries(){
-	SerieExercicio serie, serieLida;
-	FILE *arqv;
-	char continuar;
+void alteraDadosSerieEx(void){
+	SerieExercicio serieExercicio;
+	int posicaSerieArq;
 	
 	apresentaDadosAcademia();
-	
-	printf("\n");
 	
 	if(obtemQtdSeriesCadastradas() == 0){
-		printf("Nenhuma serie de exercicio cadastrada\n");
+		printf("\n\nNao existem series de exercicios cadastradas!");
+	} else {
+		printf("\n\n");
+		apresentaDadosSeriesExs();
 		
-		continuarComEnter("\nPressione [Enter] para continuar...\n");
+		// Coletando o codigo identificador da serie a ser alterada
+		serieExercicio.identificadorSerie = leValidaInt("\n\nCod. identificador da serie a ser alterada: ", "Identificador invalido... Digite novamente: ", VAL_MIN_ID_SERIE, VAL_MAX_ID_SERIE);
 		
-		return;
+		// Verificando se o codigo identificador existe
+		posicaSerieArq = obtemPosicaoSerieArq(serieExercicio.identificadorSerie);
+		if(posicaSerieArq == 0){
+			printf("\n\nIdentificador inexistente!");
+		} else {
+			// Tentando obter os dados da serie selecionada
+			if(obtemDadosSerieEx(&serieExercicio, posicaSerieArq) == 0){
+				printf("\n\nErro ao tentar recuperar os dados da serie selecionada!");
+			} else {
+				// Verificando se o usuario realizou alguma modificacao
+				if(modificaSerieEx(&serieExercicio) == 0){
+					printf("\n\nNenhum dado da serie foi alterado!");
+				} else {
+					// Tentando gravar os dados modificados
+					if(gravaDadosSerieAlterada(&serieExercicio, posicaSerieArq) == 0){
+						printf("\n\nErro ao tentar alterar os dados da serie selecionada!");
+					} else {
+						printf("\n\nDados alterados com sucesso!");
+					}
+				}
+			}
+		}
 	}
-
-	listaSerieExercicios();
-
-	if(!leSerieExercicios(&serie, 2)){
-		printf("Identificador inexistente\n");
 	
-		continuarComEnter("\nPressione [Enter] para continuar...\n");
-		
-		return;
-	}
+	continuarComEnter("\n\nPressione [Enter] para continuar...");
+}
+
+/*
+	Objetivo: Modificar os dados de uma serie
+	Parametros: endereco de memoria da serie
+	Retorno: 0(nenhum dado foi modificado) ou 1(algum dado foi modificado)
+*/
+int modificaSerieEx(SerieExercicio *serieExercicio){
+	int dadosModificados=0;
+	char opcaoDesejada;
 	
 	LIMPA_TELA;
-	
 	apresentaDadosAcademia();
+	apresentaDadosSerieEx(serieExercicio);
+	opcaoDesejada = leValidaOpcao("\n\nDeseja alterar os dados dessa serie[S/n]: ", "Opcao invalida... Digite apenas S ou N: ", "SN");
 	
-	printf("\n");
-	
-	printSerieExercicio(serie, 1);
-	
-	continuar = leValidaOpcao("\nConfirmar alteracao (S/n)? ", "Opcao invalida\nTente novamente: ", "SN");
-	
-	if(continuar == 'N'){
-		return;
-	}
-	
-	arqv = fopen(NOME_ARQ_SERIEEX, "rb+");
-	
-	if(arqv != NULL){
-		fseek(arqv, 0, SEEK_SET);
-	
-		while(!feof(arqv)){
-			if(fread(&serieLida, sizeof(SerieExercicio), 1, arqv) != 1){
-				
-				printf("Erro na alteracao de dados\n");
-				
-				fclose(arqv);
-				
-				continuarComEnter("\nPressione [Enter] para continuar...\n");
-				
-				return;
-			}
+	if(opcaoDesejada == 'S'){
+		dadosModificados=1;
+		printf("\n\nAlteracoes Possiveis: \n");
+		printf("D - Descricao\n");
+		printf("M - Duracao prevista em minutos\n");
+		printf("Q - Qtd de calorias a serem perdidas\n");
+		printf("Z - Cancelar alteracoes\n\n");
+		opcaoDesejada = leValidaOpcao("Opcao desejada: ", "Opcao invalida... Digite novamente: ", "DMQZ");
 		
-			if(serie.identificadorSerie == serieLida.identificadorSerie){
+		switch(opcaoDesejada){
+			case 'D':{
+				leValidaTexto("\nNova descricao: ", "Descricao invalida... Digite novamente: ", serieExercicio->descricao, TAM_MIN_DESCRICAO_SERIE, TAM_MAX_DESCRICAO_SERIE);
+				break;
+			}
+			
+			case 'M':{
+				serieExercicio->duracao = leValidaInt("\nNova duracao: ", "Duracao invalida... Digite novamente: ", VAL_MIN_DURACAO_SERIE, VAL_MAX_DURACAO_SERIE);
+				break;
+			}
+			
+			case 'Q':{
+				serieExercicio->qtdCaloriasPerdidas = leValidaInt("\nNova qtd de calorias perdidas: ", "Qtd invalida... Digite novamente: ", VAL_MIN_CAL_PERDIDAS, VAL_MAX_CAL_PERDIDAS);
+				break;
+			}
+			
+			case 'Z':{
+				dadosModificados=0;
 				break;
 			}
 		}
-		
-		if(fseek(arqv, -(sizeof(SerieExercicio)), SEEK_CUR) != 0){
-			printf("Erro na alteracao de dados\n");
-				
-			fclose(arqv);
-			
-			continuarComEnter("\nPressione [Enter] para continuar...\n");
-				
-			return;
-		}
-		
-		fwrite(&serie, sizeof(SerieExercicio), 1, arqv);
-		
-		fclose(arqv);
-		
-		printf("\n\nSerie alterada com sucesso!");
-		
-		continuarComEnter("\nPressione [Enter] para continuar...\n");
 	}
 	
-	
-
+	return dadosModificados;
 }
+
+/*
+	Objetivo: Gravar os dados alterados de uma serie de exercicio no arquivo de saida
+	Parametros: endereco de memoria da struct com os dados, posicao da serie no arquivo
+	Retorno: 0(erro na gravacao) ou 1(gravacao concluida)
+*/
+int gravaDadosSerieAlterada(SerieExercicio *serieExercicio, int posicaoSerieArq){
+	FILE *arq;
+	int gravacaoConcluida=0;
+	
+	arq = fopen(NOME_ARQ_SERIEEX, "rb+");
+	if(arq != NULL){
+		if(fseek(arq, sizeof(SerieExercicio)*(posicaoSerieArq-1), SEEK_SET) == 0){
+			if(fwrite(serieExercicio, sizeof(SerieExercicio), 1, arq) == 1){
+				gravacaoConcluida=1;
+			}
+		}
+		
+		fclose(arq);
+	}
+	
+	return gravacaoConcluida;
+}
+
 
 /*
 	Objetivo: Excluir uma serie de exercicios
 	Parametros: nenhum
 	Retorno: nenhum
 */
-void excluirSeries(){
-	SerieExercicio serie, serieLida;
-	FILE *arqv, *arqvAux;
-	char continuar;
-	int identificador;
+void excluiSerieEx(void){
+	SerieExercicio serieExercicio;
+	int posicaSerieArq;
+	char opcaoDesejada;
 	
 	apresentaDadosAcademia();
-	
-	printf("\n");
 	
 	if(obtemQtdSeriesCadastradas() == 0){
-		printf("Nenhuma serie de exercicio cadastrada\n");
+		printf("\n\nNao existem series de exercicios cadastradas!");
+	} else {
+		printf("\n\n");
+		apresentaDadosSeriesExs();
 		
-		continuarComEnter("\nPressione [Enter] para continuar...\n");
+		// Coletando o codigo identificador da serie a ser excluida
+		serieExercicio.identificadorSerie = leValidaInt("\n\nCod. identificador da serie a ser excluida: ", "Identificador invalido... Digite novamente: ", VAL_MIN_ID_SERIE, VAL_MAX_ID_SERIE);
 		
-		return;
-	}
-
-	listaSerieExercicios();
-	
-	identificador = leValidaInt("\nIdentificador da serie: ", "\nIdentificador invalido\nTente novamente: ", VAL_MIM_ID_SERIE, VAL_MAX_ID_SERIE);
-
-	if(!existeSerie(identificador)){
-		printf("Identificador inexistente\n");
-	
-		continuarComEnter("\nPressione [Enter] para continuar...\n");
-		
-		return;
-	}
-	
-	serie = obtemSerie(identificador);
-
-	LIMPA_TELA;
-	
-	apresentaDadosAcademia();
-	
-	printf("\n");
-	
-	printSerieExercicio(serie, 1);
-	
-	continuar = leValidaOpcao("\nConfirmar exclusao (S/n)? ", "Opcao invalida\nTente novamente: ", "SN");
-	
-	if(continuar == 'N'){
-		return;
-	}
-	
-	arqv = fopen(NOME_ARQ_SERIEEX, "rb");
-	arqvAux = fopen("arqv_aux.bin", "wb");
-	
-	if(arqv == NULL || arqvAux == NULL){
-		printf("Erro ao abrir arquivos\n");
-		
-		continuarComEnter("\nPressione [Enter] para continuar...\n");
-		
-		return;		
-	}
-
-	while(!feof(arqv)){
-		if(fread(&serieLida, sizeof(SerieExercicio), 1, arqv) == 1){
-			if(serieLida.identificadorSerie != serie.identificadorSerie){
-				if(fwrite(&serieLida, sizeof(SerieExercicio), 1, arqvAux) != 1){
-					printf("\nErro na exclusao de dados\n");
-					
-					continuarComEnter("\nPressione [Enter] para continuar...\n");
+		// Verificando se o codigo identificador existe
+		posicaSerieArq = obtemPosicaoSerieArq(serieExercicio.identificadorSerie);
+		if(posicaSerieArq == 0){
+			printf("\n\nIdentificador inexistente!");
+		} else {
+			// Tentando obter os dados da serie selecionada
+			if(obtemDadosSerieEx(&serieExercicio, posicaSerieArq) == 0){
+				printf("\n\nErro ao tentar recuperar os dados da serie selecionada!");
+			} else {
+				// Verificando se a serie selecionada e a que sera excluida
+				LIMPA_TELA;
+				apresentaDadosAcademia();
+				apresentaDadosSerieEx(&serieExercicio);
+				opcaoDesejada = leValidaOpcao("\n\nDeseja excluir essa serie de exercicio[S/n]: ", "Opcao invalida... Digite apenas S ou N: ", "SN");
 				
-					fclose(arqv);
-	
-					fclose(arqvAux);
-				
-					return;
+				if(opcaoDesejada == 'N'){
+					printf("\n\nNenhum serie de exercicio foi excluida!");
+				} else {
+					// Verificando se a serie ja foi executada por algum frequentador
+					if(verifSerieJaFoiExecutada(serieExercicio.identificadorSerie) == 1){
+						printf("\n\nEsta serie nao pode ser excluida!\n");
+						printf("Motivo: esta sendo executada por algum frequentador!\n");
+					} else {
+						// Tentando remover a serie de exercicio
+						if(removeDadosSerieArq(serieExercicio.identificadorSerie) == 0){
+							printf("\n\nErro ao tentar excluir a serie de exercicio!");
+						} else {
+							printf("\n\nSerie excluida com sucesso!");
+						}
+					}
 				}
 			}
-		} else{
-			break;
-			
 		}
 	}
 	
-	fclose(arqv);
-	
-	fclose(arqvAux);
-	
-	remove(NOME_ARQ_SERIEEX);
+	continuarComEnter("\n\nPressione [Enter] para continuar...");
+}
 
-	rename("arqv_aux.bin", NOME_ARQ_SERIEEX);
+/*
+	Objetivo: Verificar se uma determinada serie ja foi executada por algum frequentador
+	Parametros: codigo identificador da serie de exercicio
+	Retorno: 0(nao foi executada por ninguem) ou 1(ja foi executada)
+*/
+int verifSerieJaFoiExecutada(int identificadorSeriePesq){
+	AtividadeDesenvolvida ativDesenvolvida;
+	FILE *arq;
+	int jaFoiExecutada=0;
 	
-	printf("\n\nSerie excluida com sucesso!");
+	arq = fopen(NOME_ARQ_ATIVDESEV, "rb");
+	if(arq != NULL){
+		while(feof(arq) == 0){
+			if(fread(&ativDesenvolvida, sizeof(AtividadeDesenvolvida), 1, arq) == 1){
+				if(ativDesenvolvida.identificadorSerie == identificadorSeriePesq){
+					jaFoiExecutada=1;
+					break;
+				}
+			}
+		}
+		
+		fclose(arq);
+	}
+	
+	return jaFoiExecutada;
+}
 
-	continuarComEnter("\nPressione [Enter] para continuar...\n");
-
+/*
+	Objetivo: Remover os dados de uma determinada serie de um arquivo de entrada
+	Parametros: codigo identificador da serie
+	Retorno: 0(nao foi removida) ou 1(removida com sucesso)
+*/
+int removeDadosSerieArq(int identificadorSerieExc){
+	SerieExercicio serieExercicio;
+	FILE *arq, *arqAux;
+	int remocaoConcluida=1;
+	
+	arq = fopen(NOME_ARQ_SERIEEX, "rb");
+	if(arq != NULL){
+		arqAux = fopen("arqSerieAux.bin", "wb");
+		if(arqAux != NULL){
+			while(feof(arq) == 0){
+				if(fread(&serieExercicio, sizeof(SerieExercicio), 1, arq) == 1){
+					if(serieExercicio.identificadorSerie != identificadorSerieExc){
+						if(fwrite(&serieExercicio, sizeof(SerieExercicio), 1, arqAux) != 1){
+							remocaoConcluida=0;
+							break;
+						}
+					}
+				}
+			}
+			
+			fclose(arqAux);
+		} else {
+			remocaoConcluida=0;
+		}
+		fclose(arq);
+	} else {
+		remocaoConcluida=0;
+	}
+	
+	if(remocaoConcluida == 1){
+		if(remove(NOME_ARQ_SERIEEX) == 0){
+			if(rename("arqSerieAux.bin", NOME_ARQ_SERIEEX) != 0){
+				remocaoConcluida=0;
+			}
+		} else {
+			remocaoConcluida=0;
+		}
+	}
+	
+	return remocaoConcluida;
 }
