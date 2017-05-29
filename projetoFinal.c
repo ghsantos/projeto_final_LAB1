@@ -38,7 +38,7 @@ int main(void){
 		LIMPA_TELA;
 		apresentaDadosAcademia();
 		apresentaOpcoesMenu();
-		opcaoDesejada = leValidaOpcao("\nOpcao desejada: ", "Opcao invalida... Digite novamente: ", "ABCDEFGHZ");
+		opcaoDesejada = leValidaOpcao("\nOpcao desejada: ", "Opcao invalida... Digite novamente: ", "ABCDEFGHIZ");
 		LIMPA_TELA;
 		
 		switch(opcaoDesejada){
@@ -55,25 +55,28 @@ int main(void){
 				break;
 				
 			case 'D':
-				cadastraNovaSerie();
+				cadastraSerieEx();
 				break;
 			
 			case 'E':
-				alteraDadosSeries();
+				alteraDadosSerieEx();
 				break;
 				
 			case 'F':
-				excluirSeries();
+				excluiSerieEx();
 				break;
 				
 			case 'G':
-				cadastraAtividade();
+				cadastraAtivDesenvolvida();
 				break;
 				
 			case 'H':
-				excluiAtividade();
+				excluiAtivDesenvolvida();
 				break;
-				
+			
+			case 'I':
+				break;
+			
 			case 'Z':
 				printf("Programa encerrado!\n");
 				break;
