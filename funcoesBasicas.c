@@ -427,18 +427,117 @@ Horario obtemHoraSistema(void){
 	Retorno: a diferenca em dias entre as datas
 */
 int diferencaDias(Data dataInicial, Data dataFinal){
-	int dias=0;
+	int dias=0, mesMaior=0, diaMaior=0, diasAMais=0;
 	
-	dias += (dataFinal.ano - dataInicial.ano) * 365;
-	
-	if(dataFinal.mes < dataInicial.mes){
-		dias -= 365;
+	// soma a qtd de dias de cada ano
+	for(; dataInicial.ano < dataFinal.ano; ++dataInicial.ano){
+		
+		if((dataInicial.ano % 4 == 0 && dataInicial.ano % 100 != 0) || (dataInicial.ano % 400 == 0)){
+			dias += 366;
+		} else{
+			dias += 365;
+		}
 	}
 	
-	dias += (dataFinal.mes - dataInicial.mes) * 30;
+	// verifica se o mes final e menor que o mes inicial
+	if(dataFinal.mes < dataInicial.mes){
+		if((dataInicial.ano % 4 == 0 && dataInicial.ano % 100 != 0) || (dataInicial.ano % 400 == 0)){
+			dias -= 366;
+		} else{
+			dias -= 365;
+		}
+		
+		mesMaior = 1;
+	}
 	
+	// o mes final e menor que o mes inicial entao soma-se os dias ate o mes 12
+	if(mesMaior == 1){
+		for(; dataInicial.mes <= 12; ++dataInicial.mes){
+			switch (dataInicial.mes){
+				case 2:
+					if((dataInicial.ano % 4 == 0 && dataInicial.ano % 100 != 0) || (dataInicial.ano % 400 == 0)){
+						dias += 29;
+					} else{
+						dias += 28;
+					}
+					break;
+			
+				case 4:
+				case 6:
+				case 9:
+				case 11:
+					dias += 30;
+					break;
+			
+				default:
+					dias += 31;
+					break;
+			}
+		}
+	
+		// atribui 1 para somar os dias dos meses restantes
+		dataInicial.mes = 1;
+	}
+	
+	// soma a qtd de dias de cada mes
+	for(; dataInicial.mes < dataFinal.mes; ++dataInicial.mes){
+		switch (dataInicial.mes){
+			case 2:
+				if((dataInicial.ano % 4 == 0 && dataInicial.ano % 100 != 0) || (dataInicial.ano % 400 == 0)){
+					dias += 29;
+				} else{
+					dias += 28;
+				}
+				break;
+			
+			case 4:
+			case 6:
+			case 9:
+			case 11:
+				dias += 30;
+				break;
+			
+			default:
+				dias += 31;
+				break;
+		}
+	}
+
+	// verifica se o dia final e menor que o dia inicial
 	if(dataFinal.dia < dataInicial.dia){
-		dias -= 30;
+		switch (dataInicial.mes){
+			case 2:
+				if((dataInicial.ano % 4 == 0 && dataInicial.ano % 100 != 0) || (dataInicial.ano % 400 == 0)){
+					dias -= 29;
+					diasAMais = 29;
+				} else{
+					dias -= 28;
+					diasAMais = 28;
+				}
+				break;
+			
+			case 4:
+			case 6:
+			case 9:
+			case 11:
+				dias -= 30;
+				diasAMais = 30;
+				break;
+			
+			default:
+				dias -= 31;
+				diasAMais = 31;
+				break;
+		}
+		
+		diaMaior = 1;
+	}
+	
+	if(diaMaior == 1){
+		dias += diasAMais - dataInicial.dia;
+		
+		// atribui 0 para somar os dias restantes
+		dataInicial.dia = 0;
 	}
 	
 	dias += dataFinal.dia - dataInicial.dia;
