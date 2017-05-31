@@ -18,6 +18,6 @@ void cadastraAtivDesenvolvida(void);
 int gravaDadosAtivDesenvolvidaArq(AtividadeDesenvolvida *ativDesenvolvida);
 
 void excluiAtivDesenvolvida(void);
-int removeDadosAtivDesevArq(int matricFreqPesq, int idSerieExPesq);
+int removeDadosAtivDesevArq(int indice);
 
 #endif	// ATIVIDADES

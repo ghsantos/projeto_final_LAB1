@@ -8,17 +8,19 @@
 void apresentaDadosAtivsDesenvolvidas(void){
 	AtividadeDesenvolvida ativDesenvolvida;
 	FILE *arq;
-	int existeAtividades=0;
+	int existeAtividades=0, cont=1;
 	
 	arq = fopen(NOME_ARQ_ATIVDESEV, "rb");
 	if(arq != NULL){
-		printf("%-22.22s%-10.10s%s\n", "Matric. Frequentador", "Id Serie", "Data e hora do inicio");
+		printf("%-8.8s%-22.22s%-10.10s%s\n", "Indice", "Matric. Frequentador", "Id Serie", "Data e hora do inicio");
 		while(feof(arq) == 0){
 			if(fread(&ativDesenvolvida, sizeof(AtividadeDesenvolvida), 1, arq) == 1){
+				printf("%-7d", cont);
 				printf("%-22d%-10d", ativDesenvolvida.matriculaFrequentador, ativDesenvolvida.identificadorSerie);
 				printf("%02d/%02d/%d ", ativDesenvolvida.dataInicio.dia, ativDesenvolvida.dataInicio.mes, ativDesenvolvida.dataInicio.ano);
 				printf("%02d:%02d\n", ativDesenvolvida.horarioInicio.hora, ativDesenvolvida.horarioInicio.minutos);
 				existeAtividades=1;
+				++cont;
 			}
 		}
 		
@@ -247,14 +249,16 @@ int gravaDadosAtivDesenvolvidaArq(AtividadeDesenvolvida *ativDesenvolvida){
 */
 void excluiAtivDesenvolvida(void){
 	AtividadeDesenvolvida ativDesenvolvida;
-	int posicaoAtivDesevArq;
 	char opcaoDesejada;
+	int qtdAtivDesevCadastradas, indice;
 	
 	apresentaDadosAcademia();
 	printf("\n");
 	
 	// Verificando se existem atividades desenvolvidas cadastradas
-	if(obtemQtdAtivDesevCadastradas() == 0){
+	qtdAtivDesevCadastradas = obtemQtdAtivDesevCadastradas();
+	
+	if(qtdAtivDesevCadastradas == 0){
 		printf("\nNao existem atividades desenvolvidas cadastradas!");
 		continuarComEnter("\n\nPressione [Enter] para continuar...");
 		return;
@@ -263,33 +267,26 @@ void excluiAtivDesenvolvida(void){
 	
 	apresentaDadosAtivsDesenvolvidas();
 	
-	// Coletando a matricula do frequentador e o cod. identificador da serie
-	ativDesenvolvida.matriculaFrequentador = leValidaInt("\n\nDigite a matricula do frequentador: ", "Matricula invalida... Digite novamente: ", VAL_MIN_MATRIC_FREQ, VAL_MAX_MATRIC_FREQ);
-	ativDesenvolvida.identificadorSerie = leValidaInt("\nCod. identificador da serie: ", "Identificador invalido... Digite novamente: ", VAL_MIN_ID_SERIE, VAL_MAX_ID_SERIE);
+	// Coletando indice do frequentador
+	indice = leValidaInt("\n\nDigite o indice do frequentador: ", "Indice inexistente... Digite novamente: ", 1, qtdAtivDesevCadastradas);
 	
-	// Verificando se a atividade solicitada existe
-	posicaoAtivDesevArq = obtemPosicaoAtivDesenvArq(ativDesenvolvida.matriculaFrequentador, ativDesenvolvida.identificadorSerie);
-	if(posicaoAtivDesevArq == 0){
-		printf("\n\nNenhum atividade foi encontrada com esses dados!");
+	// Obtendo as informacoes da atividade
+	if(obtemDadosAtivDesenvolvida(&ativDesenvolvida, indice) == 0){
+		printf("\n\nNao foi possivel recuperar os dados da atividade selecionada!");
 	} else {
-		// Obtendo as informacoes da atividade
-		if(obtemDadosAtivDesenvolvida(&ativDesenvolvida, posicaoAtivDesevArq) == 0){
-			printf("\n\nNao foi possivel recuperar os dados da atividade selecionada!");
+		LIMPA_TELA;
+		apresentaDadosAcademia();
+		apresentaDadosAtivDesenvolvida(&ativDesenvolvida);
+		opcaoDesejada = leValidaOpcao("\n\nDeseja excluir essa atividade desenvolvida[S/n]: ", "Opcao invalida... Digite apenas S ou N: ", "SN");
+		
+		if(opcaoDesejada == 'N'){
+			printf("\n\nExclusao cancelada!");
 		} else {
-			LIMPA_TELA;
-			apresentaDadosAcademia();
-			apresentaDadosAtivDesenvolvida(&ativDesenvolvida);
-			opcaoDesejada = leValidaOpcao("\n\nDeseja excluir essa atividade desenvolvida[S/n]: ", "Opcao invalida... Digite apenas S ou N: ", "SN");
-			
-			if(opcaoDesejada == 'N'){
-				printf("\n\nExclusao cancelada!");
+			// Tentando remover os dados da atividade do arquivo de entrada
+			if(removeDadosAtivDesevArq(indice) == 0){
+				printf("\n\nErro ao tentar excluir a atividade desenvolvida!");
 			} else {
-				// Tentando remover os dados da atividade do arquivo de entrada
-				if(removeDadosAtivDesevArq(ativDesenvolvida.matriculaFrequentador, ativDesenvolvida.identificadorSerie) == 0){
-					printf("\n\nErro ao tentar excluir a atividade desenvolvida!");
-				} else {
-					printf("\n\nAtividade desenvolvida excluida com sucesso!");
-				}
+				printf("\n\nAtividade desenvolvida excluida com sucesso!");
 			}
 		}
 	}
@@ -302,10 +299,10 @@ void excluiAtivDesenvolvida(void){
 	Parametros: matricula do frequentador e o id da serie de exercicio vinculada a atividade
 	Retorno: 0(ocorreu erro na exclusao) ou 1(exclusao concluida com sucesso)
 */
-int removeDadosAtivDesevArq(int matricFreqPesq, int idSerieExPesq){
+int removeDadosAtivDesevArq(int indice){
 	AtividadeDesenvolvida ativDesenvolvida;
 	FILE *arq, *arqAux;
-	int remocaoConcluida=1;
+	int remocaoConcluida=1, cont=1;
 	
 	arq = fopen(NOME_ARQ_ATIVDESEV, "rb");
 	if(arq != NULL){
@@ -313,12 +310,13 @@ int removeDadosAtivDesevArq(int matricFreqPesq, int idSerieExPesq){
 		if(arqAux != NULL){
 			while(feof(arq) == 0){
 				if(fread(&ativDesenvolvida, sizeof(AtividadeDesenvolvida), 1, arq) == 1){
-					if(ativDesenvolvida.matriculaFrequentador != matricFreqPesq || ativDesenvolvida.identificadorSerie != idSerieExPesq){
+					if(cont != indice){
 						if(fwrite(&ativDesenvolvida, sizeof(AtividadeDesenvolvida), 1, arqAux) != 1){
 							remocaoConcluida=0;
 							break;
 						}
 					}
+					++cont;
 				}
 			}
 			
