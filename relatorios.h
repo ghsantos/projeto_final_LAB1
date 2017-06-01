@@ -7,8 +7,10 @@
 #include "academia.h"
 #include "frequentador.h"
 #include "series.h"
+#include "atividades.h"
 
 void geraRelatorios(void);
+void pesqCadastrosChaveUnica(void);
 void apresentaTodosCadastros(void);
 
 #endif	// RELATORIOS_H

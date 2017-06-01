@@ -25,4 +25,6 @@ void excluiSerieEx(void);
 int verifSerieJaFoiExecutada(int identificadorSeriePesq);
 int removeDadosSerieArq(int identificadorSerieExc);
 
+void pesqSerieExPorCodIdentif(void);
+
 #endif	// SERIES_H

@@ -471,3 +471,35 @@ int removeDadosSerieArq(int identificadorSerieExc){
 	
 	return remocaoConcluida;
 }
+
+/*
+	Objetivo: Pesquisar uma serie de exercicio pelo seu codigo identificador
+	Parametros: nenhum
+	Retorno: nenhum
+*/
+void pesqSerieExPorCodIdentif(void){
+	SerieExercicio serieExercicio;
+	char opcaoDesejada;
+	
+	apresentaDadosAcademia();
+	
+	// Verificando se existem series de exercicios cadastradas
+	if(obtemQtdSeriesCadastradas() == 0){
+		printf("\n\nNao existem series de exercicios cadastradas!");
+	} else {
+		printf("\n");
+		apresentaDadosSeriesExsArq();
+		
+		// Coletando o codigo identificador da serie a ser excluida
+		serieExercicio.identificadorSerie = leValidaInt("\n\nCod. identificador da serie a ser pesquisada: ", "Identificador invalido... Digite novamente: ", VAL_MIN_ID_SERIE, VAL_MAX_ID_SERIE);
+		
+		// Verificando se a serie existe e obtendo os dados
+		if(obtemDadosSeriePorCodIdentif(&serieExercicio, serieExercicio.identificadorSerie) == 0){
+			printf("\n\nIdentificador inexistente!");
+		} else {
+			LIMPA_TELA;
+			apresentaDadosAcademia();
+			apresentaDadosSerieEx(&serieExercicio);
+		}
+	}
+}
