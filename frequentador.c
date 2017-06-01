@@ -100,11 +100,12 @@ int obtemDadosFreqPorMatric(Frequentador *frequentador, int matriculaPesq){
 }
 
 /*
-	Objetivo: Apresentar os dados de todos os frequentadores cadastrados
+	Objetivo: Apresentar os dados de todos os frequentadores armazenados em um
+		arquivo de entrada
 	Parametros: nenhum
 	Retorno: nenhum
 */
-void apresentaDadosFrequentadores(void){
+void apresentaDadosFrequentadoresArq(void){
 	FILE *arq;
 	Frequentador frequentador;
 	int existeFreq=0;
@@ -129,7 +130,24 @@ void apresentaDadosFrequentadores(void){
 }
 
 /*
-	Objetivo: Apresentar os dados de um frequentador
+	Objetivo: Apresentar os dados de todos os frequentadores armazenados em memoria
+	Parametros: endereco de memoria incial de vetor de frequentadores, qtd de frequentadores
+	Retorno: nenhum
+*/
+void apresentaDadosFrequentadoresMemoria(Frequentador *frequentadores, int qtdFreq){
+	int cont;
+	
+	printf("%-10.10s%-15.15s%-13.13s%-11.11s%s\n", "Matricula", "Nome", "CPF", "Sexo", "Peso (kg)");
+	
+	for(cont=0; cont<qtdFreq; cont++){
+		printf("%-10d%-14.14s %-13.13s", frequentadores[cont].matricula, frequentadores[cont].nome, frequentadores[cont].cpf);
+		printf("%-11.11s", frequentadores[cont].sexo == 'M' ? "Masculino" : "Feminino");
+		printf("%.2f\n", frequentadores[cont].peso);
+	}
+}
+
+/*
+	Objetivo: Apresentar os dados de um frequentador armazenado em memoria
 	Parametros: endereco de memoria da struct com os dados a serem exibidos
 	Retorno: nenhum
 */
@@ -228,7 +246,7 @@ void alteraDadosFrequentador(void){
 		printf("\n\nNao existem frequentadores cadastrados!\n");
 	} else {
 		printf("\n\n");
-		apresentaDadosFrequentadores();
+		apresentaDadosFrequentadoresArq();
 		frequentador.matricula = leValidaInt("\n\nMatricula do frequentador a ser alterado: ", "Matricula invalida... Digite novamente: ", VAL_MIN_MATRIC_FREQ, VAL_MAX_MATRIC_FREQ);
 		
 		// Verificando se a matricula existe
@@ -377,7 +395,7 @@ void excluiFrequentador(void){
 		printf("\n\nNao existem frequentadores cadastrados!\n");
 	} else {
 		printf("\n\n");
-		apresentaDadosFrequentadores();
+		apresentaDadosFrequentadoresArq();
 		frequentador.matricula = leValidaInt("\n\nMatricula do frequentador a ser excluido: ", "Matricula invalida... Digite novamente: ", VAL_MIN_MATRIC_FREQ, VAL_MAX_MATRIC_FREQ);
 		
 		// Verificando se o frequentador existe e obtendo os dados
@@ -482,4 +500,111 @@ int removeDadosFreqArq(int matriculaFreqExc){
 	}
 	
 	return remocaoConcluida;
+}
+
+/*
+	Objetivo: Pesquisar frequentadores pelo nome
+	Parametros: nenhum
+	Retorno: nenhum
+*/
+void pesqFrequentadoresPeloNome(void){
+	FILE *arq;
+	char nomeFreqPesq[TAM_MAX_NOME_FREQ], nomeFreqLidoAux[TAM_MAX_NOME_FREQ];
+	Frequentador *frequentadores=NULL, *freqAux, freqLido;
+	int qtdFreqEncontrados=0, erroPesquisa=0;
+	
+	// Exibindo os dados auxiliares
+	apresentaDadosAcademia();
+	printf("\n");
+	
+	// Verificando se existem frequentadores cadastrados
+	if(obtemQtdFreqCadastrados() == 0){
+		printf("Nao existem frequentadores cadastrados!");
+		continuarComEnter("\n\nPressione [Enter] para continuar...");
+		return;
+	}
+	
+	
+	// Caso existam frequentadores
+	apresentaDadosFrequentadoresArq();
+	
+	// Coletando o nome a ser pesquisado
+	leValidaTexto("\n\nDigite o nome do frequentador a ser pesquisado: ", "Nome invalido... Digite ao menos 3 caracteres: ", nomeFreqPesq, TAM_MIN_NOME_FREQ, TAM_MAX_NOME_FREQ);
+	
+	// Transformando o nome para minusculo para facilitar a busca
+	toLowerStr(nomeFreqPesq);
+	
+	// Tentando abrir o arquivo de entrada com os dados
+	arq = fopen(NOME_ARQ_FREQ, "rb");
+	if(arq == NULL){
+		printf("\n\nErro ao tentar ler o arquivo com os dados!\n");
+		erroPesquisa=1;
+	} else {
+		// Pesquisando e filtrando o dados
+		while(feof(arq) == 0){
+			if(fread(&freqLido, sizeof(Frequentador), 1, arq) == 1){
+				// Convertendo o nome lido para minusculo em uma variavel auxiliar
+				strcpy(nomeFreqLidoAux, freqLido.nome);
+				toLowerStr(nomeFreqLidoAux);
+				
+				// Comparando o nome lido no arquivo com o pesquisado
+				if(strstr(nomeFreqLidoAux, nomeFreqPesq) != NULL){
+					// Tentando alocar memoria
+					freqAux = realloc(frequentadores, sizeof(Frequentador)*(qtdFreqEncontrados+1));
+					if(freqAux != NULL){
+						frequentadores = freqAux;
+						frequentadores[qtdFreqEncontrados] = freqLido;
+						qtdFreqEncontrados++;
+					} else {
+						printf("\n\nErro de alocacao!\n");
+						erroPesquisa=1;
+						break;
+					}
+				}
+			}
+		}
+		fclose(arq);
+	}
+	
+	// Verificando se ocorreu algum erro
+	if(erroPesquisa == 1){
+		printf("Pesquisa encerrada!");
+	} else if(qtdFreqEncontrados == 0){
+		printf("\n\nNao foi encontrado nenhum frequentador com esse nome!");
+	} else {
+		// Ordenando os frequentadores encontrados pelo nome
+		ordenaFreqPeloNome(frequentadores, qtdFreqEncontrados);
+		
+		// Apresentando os dados encontrados
+		LIMPA_TELA;
+		apresentaDadosAcademia();
+		printf("\nFrequentadores encontrados:\n\n");
+		apresentaDadosFrequentadoresMemoria(frequentadores, qtdFreqEncontrados);
+		free(frequentadores);		
+	}
+	
+	continuarComEnter("\n\nPressione [Enter] para continuar...");
+}
+
+/*
+	Objetivo: Ordenar os dados dos frequentadores por ordem alfabetica de nomes usando Qsort
+	Parametros: endereco de memoria inicial do vetor de frequentadores, qtd de frequentadores
+	Retorno: nenhum
+*/
+void ordenaFreqPeloNome(Frequentador *frequentadores, int qtdFreq){
+	qsort(frequentadores, qtdFreq, sizeof(Frequentador), verificaOrdenacaoNomeFreq);
+}
+
+/*
+	Objetivo: Verificar se os dados devem ser trocados pela Qsort
+	Parametros: dois enderecos de memoria
+	Retorno: um valor menor, maior ou igual a zero
+*/
+int verificaOrdenacaoNomeFreq(const void *p1, const void *p2){
+	Frequentador *freq1, *freq2;
+	
+	freq1 = (Frequentador*) p1;
+	freq2 = (Frequentador*) p2;
+	
+	return stricmp(freq1->nome, freq2->nome);
 }
