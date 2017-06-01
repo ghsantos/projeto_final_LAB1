@@ -385,7 +385,6 @@ int gravaDadosFreqAlterado(Frequentador *frequentador, int posicaoFreqArq){
 */
 void excluiFrequentador(void){
 	Frequentador frequentador;
-	int posicaoFreqArq;
 	char opcaoDesejada;
 	
 	
@@ -411,7 +410,7 @@ void excluiFrequentador(void){
 				printf("\n\nNenhum frequentador foi excluido!");
 			} else {
 				// Verificando se o frequentador ja executou alguma atividade na academia
-				if(verifFreqExecutouAtividades(frequentador.matricula) == 1){
+				if(verifFreqFezAlgumaAtividade(frequentador.matricula) == 1){
 					printf("\n\nEsse frequentador nao pode ser excluido!\n");
 					printf("Motivo: esse frequentador possui atividades cadastradas!");
 				} else {
@@ -428,31 +427,6 @@ void excluiFrequentador(void){
 	
 	
 	continuarComEnter("\n\nPressione [Enter] para continuar...");
-}
-
-/*
-	Objetivo: Verificar se um determinado frequentador ja executou alguma serie de exercicios (Atividade desenvolvidas)
-	Parametros: matricula do frequentador
-	Retorno: 0(nao existem atividades cadastradas) ou 1(ja executou alguma atividade)
-*/
-int verifFreqExecutouAtividades(int matriculaVerif){
-	AtividadeDesenvolvida ativDesenvolvida;
-	FILE *arq;
-	int jaDesenvolveuAtiv=0;
-	
-	arq = fopen(NOME_ARQ_ATIVDESEV, "rb");
-	if(arq != NULL){
-		while(feof(arq) == 0){
-			if(fread(&ativDesenvolvida, sizeof(AtividadeDesenvolvida), 1, arq) == 1){
-				if(ativDesenvolvida.matriculaFrequentador == matriculaVerif){
-					jaDesenvolveuAtiv=1;
-					break;
-				}
-			}
-		}
-	}
-	
-	return jaDesenvolveuAtiv;
 }
 
 /*
@@ -500,6 +474,37 @@ int removeDadosFreqArq(int matriculaFreqExc){
 	}
 	
 	return remocaoConcluida;
+}
+
+/*
+	Objetivo: Pesquisar um frequentador pela matricula
+	Parametros: nenhum
+	Retorno: nenhum
+*/
+void pesqFrequentadorPelaMatric(void){
+	Frequentador frequentador;
+	char opcaoDesejada;
+	
+	
+	apresentaDadosAcademia();
+	
+	// Verificando se existem frequentadores cadastrados
+	if(obtemQtdFreqCadastrados() == 0){
+		printf("\n\nNao existem frequentadores cadastrados!\n");
+	} else {
+		printf("\n");
+		apresentaDadosFrequentadoresArq();
+		frequentador.matricula = leValidaInt("\n\nMatricula do frequentador a ser pesquisado: ", "Matricula invalida... Digite novamente: ", VAL_MIN_MATRIC_FREQ, VAL_MAX_MATRIC_FREQ);
+		
+		// Verificando se o frequentador existe e obtendo os dados
+		if(obtemDadosFreqPorMatric(&frequentador, frequentador.matricula) == 0){
+			printf("\n\nNao foi encontrado nenhum frequentador com essa matricula!");
+		} else {
+			LIMPA_TELA;
+			apresentaDadosAcademia();
+			apresentaDadosFrequentador(&frequentador);
+		}
+	}
 }
 
 /*

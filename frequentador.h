@@ -6,6 +6,7 @@
 #include "funcoesBasicas.h"
 #include "academia.h"
 #include "series.h"
+#include "atividades.h"
 
 int obtemQtdFreqCadastrados(void);
 int obtemPosicaoFreqArq(int matriculaPesq);
@@ -23,9 +24,9 @@ int modificaFrequentador(Frequentador *frequentador);
 int gravaDadosFreqAlterado(Frequentador *frequentador, int posicaoFreqArq);
 
 void excluiFrequentador(void);
-int verifFreqExecutouAtividades(int matriculaVerif);
 int removeDadosFreqArq(int matriculaFreqExc);
 
+void pesqFrequentadorPelaMatric(void);
 void pesqFrequentadoresPeloNome(void);
 void ordenaFreqPeloNome(Frequentador *frequentadores, int qtdFreq);
 int verificaOrdenacaoNomeFreq(const void *p1, const void *p2);
