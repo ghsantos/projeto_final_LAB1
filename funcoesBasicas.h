@@ -22,6 +22,7 @@ Horario obtemHoraSistema(void);
 int diferencaDias(Data dataInicial, Data dataFinal);
 int verificaArqExiste(char *nomeArq);
 void continuarComEnter(char *msg);
-void apresentaOpcoesMenu(void);
+void apresentaOpcoesMenuPrincipal(void);
+void apresentaOpcoesMenuRelatorios(void);
 
 #endif // FUNCOES_BASICAS_H
