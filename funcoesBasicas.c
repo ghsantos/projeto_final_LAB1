@@ -578,11 +578,11 @@ void continuarComEnter(char *msg){
 }
 
 /*
-	Objetivo: Apresentar as opcoes do menu
+	Objetivo: Apresentar as opcoes do menu principal
 	Parametros: nenhum
 	Retorno: nenhum
 */
-void apresentaOpcoesMenu(void){
+void apresentaOpcoesMenuPrincipal(void){
 	printf("\nFrequentador\n");
 	printf("A - Cadastrar novo\n");
 	printf("B - Alterar dados\n");
@@ -600,4 +600,20 @@ void apresentaOpcoesMenu(void){
 	printf("I - Gerar relatorios\n\n");
 	
 	printf("Z - Encerrar o programa\n\n");
+}
+
+/*
+	Objetivo: Apresentar as opcoes do menu de relatorios
+	Parametros: nenhum
+	Retorno: nenhum
+*/
+void apresentaOpcoesMenuRelatorios(void){
+	printf("\nA - Pesquisar dados pela chave primaria (R1)\n");
+	printf("B - Exibir todos os cadastros do sistema (R1)\n");
+	printf("C - Pesquisar frequentadores pelo nome (R2)\n");
+	printf("D - Exibir frequentador ativos (R3)\n");
+	printf("E - Filtrar atividades dos frequentadores por datas (R4)\n");
+	printf("Z - Retornar ao menu principal\n\n");
+	
+	
 }
