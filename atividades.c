@@ -5,7 +5,38 @@
 	Parametros: nenhum
 	Retorno: nenhum
 */
-void apresentaDadosAtivsDesenvolvidas(void){
+void apresentaDadosAtividadesArq(void){
+	AtividadeDesenvolvida ativDesenvolvida;
+	FILE *arq;
+	int existeAtividades=0;
+	
+	arq = fopen(NOME_ARQ_ATIVDESEV, "rb");
+	if(arq != NULL){
+		printf("%-22.22s%-10.10s%s\n", "Matric. Frequentador", "Id Serie", "Data e hora do inicio");
+		while(feof(arq) == 0){
+			if(fread(&ativDesenvolvida, sizeof(AtividadeDesenvolvida), 1, arq) == 1){
+				printf("%-22d%-10d", ativDesenvolvida.matriculaFrequentador, ativDesenvolvida.identificadorSerie);
+				printf("%02d/%02d/%d ", ativDesenvolvida.dataInicio.dia, ativDesenvolvida.dataInicio.mes, ativDesenvolvida.dataInicio.ano);
+				printf("%02d:%02d\n", ativDesenvolvida.horarioInicio.hora, ativDesenvolvida.horarioInicio.minutos);
+				existeAtividades=1;
+			}
+		}
+		
+		fclose(arq);
+	}
+	
+	if(existeAtividades == 0){
+		printf("Nao existem atividades cadastradas!");
+	}
+}
+
+/*
+	Objetivo: Apresentar os dados de todas as atividades desenvolvidas cadastradas com
+		um indice seletor
+	Parametros: nenhum
+	Retorno: nenhum
+*/
+void apresentaDadosAtividadesArqIndice(void){
 	AtividadeDesenvolvida ativDesenvolvida;
 	FILE *arq;
 	int existeAtividades=0, cont=1;
@@ -29,6 +60,38 @@ void apresentaDadosAtivsDesenvolvidas(void){
 	
 	if(existeAtividades == 0){
 		printf("\n\nNao existem atividades cadastradas!");
+	}
+}
+
+/*
+	Objetivo: Apresentar todas as atividades desenvolvidas por um frequentador
+	Parametros: matricula do frequentador
+	Retorno: nenhum
+*/
+void apresentaAtivsFrequentador(int matriculaPesq){
+	AtividadeDesenvolvida ativDesenvolvida;
+	FILE *arq;
+	int existeAtividades=0;
+	
+	arq = fopen(NOME_ARQ_ATIVDESEV, "rb");
+	if(arq != NULL){
+		printf("%-22.22s%-10.10s%s\n", "Matric. Frequentador", "Id Serie", "Data e hora do inicio");
+		while(feof(arq) == 0){
+			if(fread(&ativDesenvolvida, sizeof(AtividadeDesenvolvida), 1, arq) == 1){
+				if(ativDesenvolvida.matriculaFrequentador == matriculaPesq){
+					printf("%-22d%-10d", ativDesenvolvida.matriculaFrequentador, ativDesenvolvida.identificadorSerie);
+					printf("%02d/%02d/%d ", ativDesenvolvida.dataInicio.dia, ativDesenvolvida.dataInicio.mes, ativDesenvolvida.dataInicio.ano);
+					printf("%02d:%02d\n", ativDesenvolvida.horarioInicio.hora, ativDesenvolvida.horarioInicio.minutos);
+					existeAtividades=1;
+				}
+			}
+		}
+		
+		fclose(arq);
+	}
+	
+	if(existeAtividades == 0){
+		printf("Nenhuma atividade foi encontrada!\n");
 	}
 }
 
@@ -82,11 +145,44 @@ int obtemQtdAtivDesevCadastradas(void){
 }
 
 /*
+	Objetivo: Obter os dados de uma atividade desenvolvida a partir da sua chave unica
+	Parametros: endereco de memoria da struct com os dados da atividade
+	Retorno: 0(nao foi encontrada) ou 1(atividade encontrada)
+*/
+int obtemDadosAtivPorChaveUnica(AtividadeDesenvolvida *ativDesenvPesq){
+	
+	AtividadeDesenvolvida ativDesenvLida;
+	FILE *arq;
+	int ativEncontrada=0;
+	
+	arq = fopen(NOME_ARQ_ATIVDESEV, "rb");
+	if(arq != NULL){
+		while(feof(arq) == 0){
+			if(fread(&ativDesenvLida, sizeof(AtividadeDesenvolvida), 1, arq) == 1){
+				if(ativDesenvLida.matriculaFrequentador == ativDesenvPesq->matriculaFrequentador &&
+					ativDesenvLida.identificadorSerie == ativDesenvPesq->identificadorSerie &&
+					ativDesenvLida.dataInicio.dia == ativDesenvPesq->dataInicio.dia && ativDesenvLida.dataInicio.mes == ativDesenvPesq->dataInicio.mes &&
+					ativDesenvLida.dataInicio.ano == ativDesenvPesq->dataInicio.ano){
+						ativDesenvPesq->horarioInicio = ativDesenvLida.horarioInicio;
+						ativEncontrada=1;
+						break;
+					}
+			}
+		}
+		
+		fclose(arq);
+	}
+	
+	return ativEncontrada;
+}
+
+
+/*
 	Objetivo: Obter os dados de uma atividade desenvolvida a partir da sua posicao em um arquivo de entrada
 	Parametros: endereco de memoria da struct que vai armazenar os dados, posicao dos dados no arquivo
 	Retorno: 0(os dados nao foram recuperados) ou 1(dados recuperados com sucesso)
 */
-int obtemDadosAtivDesenvolvida(AtividadeDesenvolvida *ativDesenvolvida, int posicaAtivDesevArq){
+int obtemDadosAtivPorPosicaoArq(AtividadeDesenvolvida *ativDesenvolvida, int posicaAtivDesevArq){
 	FILE *arq;
 	int ativDesevEncontrada=0;
 	
@@ -121,7 +217,7 @@ void apresentaDadosAtivDesenvolvida(AtividadeDesenvolvida *ativDesenvolvida){
 	Parametros: a struct da atividade desenvolvida
 	Retorno: 1 se o frequentador fez, 0 caso contrario
 */
-int fezAtividadeHoje(AtividadeDesenvolvida atividade){
+int verifFreqFezAtividadeHoje(AtividadeDesenvolvida atividade){
 	FILE *arqv;
 	int fezAtividade=0;
 	AtividadeDesenvolvida ativddAux;
@@ -150,6 +246,30 @@ int fezAtividadeHoje(AtividadeDesenvolvida atividade){
 	return fezAtividade;
 }
 
+/*
+	Objetivo: Verificar se um determinado frequentador ja executou alguma serie de exercicios (Atividade desenvolvidas)
+	Parametros: matricula do frequentador
+	Retorno: 0(nao existem atividades cadastradas) ou 1(ja executou alguma atividade)
+*/
+int verifFreqFezAlgumaAtividade(int matriculaVerif){
+	AtividadeDesenvolvida ativDesenvolvida;
+	FILE *arq;
+	int jaDesenvolveuAtiv=0;
+	
+	arq = fopen(NOME_ARQ_ATIVDESEV, "rb");
+	if(arq != NULL){
+		while(feof(arq) == 0){
+			if(fread(&ativDesenvolvida, sizeof(AtividadeDesenvolvida), 1, arq) == 1){
+				if(ativDesenvolvida.matriculaFrequentador == matriculaVerif){
+					jaDesenvolveuAtiv=1;
+					break;
+				}
+			}
+		}
+	}
+	
+	return jaDesenvolveuAtiv;
+}
 /*
 	Objetivo: Cadastrar uma nova atividade a ser desenvolvida
 	Parametros: nenhum
@@ -197,7 +317,7 @@ void cadastraAtivDesenvolvida(void){
 		// Verificando se o codigo identificador existe
 		if(obtemPosicaoSerieArq(ativDesenvolvida.identificadorSerie) == 0){
 			printf("\n\nNao foi encontrada nenhum serie com esse cod. identificador!");
-		} else if(fezAtividadeHoje(ativDesenvolvida) == 1){ // Verificando se o frequentador ja realizou essa atividade no dia
+		} else if(verifFreqFezAtividadeHoje(ativDesenvolvida) == 1){ // Verificando se o frequentador ja realizou essa atividade no dia
 			printf("\n\nEssa atividade nao pode ser cadastrada!\n");
 			printf("Motivo: o frequentador ja realizou esta atividade hoje.");
 		} else {
@@ -265,13 +385,13 @@ void excluiAtivDesenvolvida(void){
 	}
 	
 	
-	apresentaDadosAtivsDesenvolvidas();
+	apresentaDadosAtividadesArqIndice();
 	
 	// Coletando indice do frequentador
 	indice = leValidaInt("\n\nDigite o indice do frequentador: ", "Indice inexistente... Digite novamente: ", 1, qtdAtivDesevCadastradas);
 	
 	// Obtendo as informacoes da atividade
-	if(obtemDadosAtivDesenvolvida(&ativDesenvolvida, indice) == 0){
+	if(obtemDadosAtivPorPosicaoArq(&ativDesenvolvida, indice) == 0){
 		printf("\n\nNao foi possivel recuperar os dados da atividade selecionada!");
 	} else {
 		LIMPA_TELA;
@@ -340,4 +460,60 @@ int removeDadosAtivDesevArq(int indice){
 	}
 	
 	return remocaoConcluida;
+}
+
+/*
+	Objetivo: Pesquisar uma atividade desenvolvida pelas suas chaves unicas
+	Parametros: nenhum
+	Retorno: nenhum
+*/
+void pesqAtivDesevPelaChaveUnica(void){
+	AtividadeDesenvolvida ativDesenvolvida;
+	int dataValida;
+	
+	
+	apresentaDadosAcademia();
+	
+	// Verificando se existem atividades cadastradas
+	if(obtemQtdAtivDesevCadastradas() == 0){
+		printf("\n\nNao existem atividades desenvolvidas cadastradas!");
+		return;
+	}
+	
+	// Caso existam atividades cadastradas
+	printf("\n");
+	apresentaDadosAtividadesArq();
+	ativDesenvolvida.matriculaFrequentador = leValidaInt("\n\nMatricula do frequentador que executou a atividade: ", "Matricula invalida... Digite novamente: ", VAL_MIN_MATRIC_FREQ, VAL_MAX_MATRIC_FREQ);
+	
+	// Verificando se o freq. informado ja executou alguma atividade
+	if(verifFreqFezAlgumaAtividade(ativDesenvolvida.matriculaFrequentador) == 0){
+		printf("\n\nEste frequentador nao executou nenhum atividade!");
+	} else {
+		LIMPA_TELA;
+		apresentaDadosAcademia();
+		printf("\n");
+		apresentaAtivsFrequentador(ativDesenvolvida.matriculaFrequentador);
+		
+		ativDesenvolvida.identificadorSerie = leValidaInt("\n\nCod. identificador da serie desejada: ", "Identificador invalido... Digite novamente: ", VAL_MIN_ID_SERIE, VAL_MAX_ID_SERIE);
+		
+		do{
+			printf("\nData de inicio\n");
+			ativDesenvolvida.dataInicio.dia = leValidaInt("Dia: ", "Dia invalido... Digite novamente: ", 1, 31);
+			ativDesenvolvida.dataInicio.mes = leValidaInt("\nMes: ", "Mes invalido... Digite novamente: ", 1, 12);
+			ativDesenvolvida.dataInicio.ano = leValidaInt("\nAno: ", "Ano invalido... Digite novamente: ", 1901, 2037);
+			dataValida = verifDataValida(ativDesenvolvida.dataInicio);
+			
+			if(dataValida == 0){
+				printf("\nData invalida... Digite novamente!");
+			}
+		}while(dataValida == 0);
+		
+		if(obtemDadosAtivPorChaveUnica(&ativDesenvolvida) == 0){
+			printf("\n\nNenhum atividade foi encontrada!");
+		} else {
+			LIMPA_TELA;
+			apresentaDadosAcademia();
+			apresentaDadosAtivDesenvolvida(&ativDesenvolvida);
+		}
+	}
 }
