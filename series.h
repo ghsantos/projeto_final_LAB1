@@ -8,7 +8,8 @@
 
 int obtemQtdSeriesCadastradas(void);
 int obtemPosicaoSerieArq(int identificadorSeriePesq);
-int obtemDadosSerieEx(SerieExercicio *serieExercicio, int posicaoSerieArq);
+int obtemDadosSeriePorPosicaoArq(SerieExercicio *serieExercicio, int posicaoSerieArq);
+int obtemDadosSeriePorCodIdentif(SerieExercicio *serieExercicio, int identificadorPesq);
 void apresentaDadosSeriesExs(void);
 void apresentaDadosSerieEx(SerieExercicio *serieExercicio);
 
