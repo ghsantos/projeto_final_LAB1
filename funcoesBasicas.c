@@ -608,12 +608,11 @@ void apresentaOpcoesMenuPrincipal(void){
 	Retorno: nenhum
 */
 void apresentaOpcoesMenuRelatorios(void){
-	printf("\nA - Pesquisar dados pela chave primaria (R1)\n");
+	printf("\nRelatorios disponiveis\n\n");
+	printf("A - Pesquisar dados pela chave primaria (R1)\n");
 	printf("B - Exibir todos os cadastros do sistema (R1)\n");
 	printf("C - Pesquisar frequentadores pelo nome (R2)\n");
-	printf("D - Exibir frequentador ativos (R3)\n");
+	printf("D - Pesquisar frequentador por serie realizada (R3)\n");
 	printf("E - Filtrar atividades dos frequentadores por datas (R4)\n");
 	printf("Z - Retornar ao menu principal\n\n");
-	
-	
 }
