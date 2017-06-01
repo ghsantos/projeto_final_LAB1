@@ -8,7 +8,8 @@
 
 int obtemQtdFreqCadastrados(void);
 int obtemPosicaoFreqArq(int matriculaPesq);
-int obtemDadosFrequentador(Frequentador *frequentador, int posicaoFreqArq);
+int obtemDadosFreqPorPosicaoArq(Frequentador *frequentador, int posicaoFreqArq);
+int obtemDadosSeriePorPosicaoArq(SerieExercicio *serieExercicio, int posicaoSerieArq);
 void apresentaDadosFrequentadores(void);
 void apresentaDadosFrequentador(Frequentador *frequentador);
 
