@@ -56,7 +56,7 @@ int obtemPosicaoSerieArq(int identificadorSeriePesq){
 		posicao dos dados da serie no arquivo de entrada
 	Retorno: 0(os dados nao foram recuperados) ou 1(os dados foram recuperados)
 */
-int obtemDadosSerieEx(SerieExercicio *serieExercicio, int posicaoSerieArq){
+int obtemDadosSeriePorPosicaoArq(SerieExercicio *serieExercicio, int posicaoSerieArq){
 	FILE *arq;
 	int serieExEncontrada=0;
 	
@@ -73,6 +73,35 @@ int obtemDadosSerieEx(SerieExercicio *serieExercicio, int posicaoSerieArq){
 	
 	return serieExEncontrada;
 }
+
+/*
+	Objetivo: Obter os dados de uma serie de exercicios a partir do seu codigo identifiador
+		armazenado em um arquivo de entrada
+	Parametros: endereco de memoria da struct(serie de exercicios) que vai armazenar os dados,
+		codigo identificador da serie
+	Retorno: 0(os dados nao foram recuperados) ou 1(os dados foram recuperados)
+*/
+int obtemDadosSeriePorCodIdentif(SerieExercicio *serieExercicio, int identificadorPesq){
+	FILE *arq;
+	int serieExEncontrada=0;
+	
+	arq = fopen(NOME_ARQ_SERIEEX, "rb");
+	if(arq != NULL){
+		while(feof(arq) == 0){
+			if(fread(serieExercicio, sizeof(SerieExercicio), 1, arq) == 1){
+				if(serieExercicio->identificadorSerie == identificadorPesq){
+					serieExEncontrada=1;
+					break;
+				}
+			}
+		}
+		
+		fclose(arq);
+	}
+	
+	return serieExEncontrada;
+}
+
 
 /*
 	Objetivo: Apresentar os dados de todas as series de exercicios cadastradas
@@ -223,7 +252,7 @@ void alteraDadosSerieEx(void){
 			printf("\n\nIdentificador inexistente!");
 		} else {
 			// Tentando obter os dados da serie selecionada
-			if(obtemDadosSerieEx(&serieExercicio, posicaSerieArq) == 0){
+			if(obtemDadosSeriePorPosicaoArq(&serieExercicio, posicaSerieArq) == 0){
 				printf("\n\nErro ao tentar recuperar os dados da serie selecionada!");
 			} else {
 				// Verificando se o usuario realizou alguma modificacao
@@ -338,35 +367,28 @@ void excluiSerieEx(void){
 		// Coletando o codigo identificador da serie a ser excluida
 		serieExercicio.identificadorSerie = leValidaInt("\n\nCod. identificador da serie a ser excluida: ", "Identificador invalido... Digite novamente: ", VAL_MIN_ID_SERIE, VAL_MAX_ID_SERIE);
 		
-		// Verificando se o codigo identificador existe
-		posicaSerieArq = obtemPosicaoSerieArq(serieExercicio.identificadorSerie);
-		if(posicaSerieArq == 0){
+		// Verificando se a serie existe e obtendo os dados
+		if(obtemDadosSeriePorCodIdentif(&serieExercicio, serieExercicio.identificadorSerie) == 0){
 			printf("\n\nIdentificador inexistente!");
 		} else {
-			// Tentando obter os dados da serie selecionada
-			if(obtemDadosSerieEx(&serieExercicio, posicaSerieArq) == 0){
-				printf("\n\nErro ao tentar recuperar os dados da serie selecionada!");
+			LIMPA_TELA;
+			apresentaDadosAcademia();
+			apresentaDadosSerieEx(&serieExercicio);
+			opcaoDesejada = leValidaOpcao("\n\nDeseja excluir essa serie de exercicio[S/n]: ", "Opcao invalida... Digite apenas S ou N: ", "SN");
+			
+			if(opcaoDesejada == 'N'){
+				printf("\n\nNenhum serie de exercicio foi excluida!");
 			} else {
-				// Verificando se a serie selecionada e a que sera excluida
-				LIMPA_TELA;
-				apresentaDadosAcademia();
-				apresentaDadosSerieEx(&serieExercicio);
-				opcaoDesejada = leValidaOpcao("\n\nDeseja excluir essa serie de exercicio[S/n]: ", "Opcao invalida... Digite apenas S ou N: ", "SN");
-				
-				if(opcaoDesejada == 'N'){
-					printf("\n\nNenhum serie de exercicio foi excluida!");
+				// Verificando se a serie ja foi executada por algum frequentador
+				if(verifSerieJaFoiExecutada(serieExercicio.identificadorSerie) == 1){
+					printf("\n\nEsta serie nao pode ser excluida!\n");
+					printf("Motivo: esta sendo executada por algum frequentador!\n");
 				} else {
-					// Verificando se a serie ja foi executada por algum frequentador
-					if(verifSerieJaFoiExecutada(serieExercicio.identificadorSerie) == 1){
-						printf("\n\nEsta serie nao pode ser excluida!\n");
-						printf("Motivo: esta sendo executada por algum frequentador!\n");
+					// Tentando remover a serie de exercicio
+					if(removeDadosSerieArq(serieExercicio.identificadorSerie) == 0){
+						printf("\n\nErro ao tentar excluir a serie de exercicio!");
 					} else {
-						// Tentando remover a serie de exercicio
-						if(removeDadosSerieArq(serieExercicio.identificadorSerie) == 0){
-							printf("\n\nErro ao tentar excluir a serie de exercicio!");
-						} else {
-							printf("\n\nSerie excluida com sucesso!");
-						}
+						printf("\n\nSerie excluida com sucesso!");
 					}
 				}
 			}
