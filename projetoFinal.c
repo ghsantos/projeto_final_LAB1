@@ -19,6 +19,7 @@
 #include "frequentador.h"
 #include "series.h"
 #include "atividades.h"
+#include "relatorios.h"
 
 int main(void){
 	char opcaoDesejada;
@@ -37,7 +38,7 @@ int main(void){
 	do{
 		LIMPA_TELA;
 		apresentaDadosAcademia();
-		apresentaOpcoesMenu();
+		apresentaOpcoesMenuPrincipal();
 		opcaoDesejada = leValidaOpcao("\nOpcao desejada: ", "Opcao invalida... Digite novamente: ", "ABCDEFGHIZ");
 		LIMPA_TELA;
 		
@@ -75,6 +76,7 @@ int main(void){
 				break;
 			
 			case 'I':
+				geraRelatorios();
 				break;
 			
 			case 'Z':
