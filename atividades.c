@@ -178,7 +178,7 @@ void cadastraAtivDesenvolvida(void){
 	
 	// Se existirem frequentadores e series cadastradas
 	// Obtendo o matricula do frequentador
-	apresentaDadosFrequentadores();
+	apresentaDadosFrequentadoresArq();
 	ativDesenvolvida.matriculaFrequentador = leValidaInt("\n\nDigite a matricula do frequentador desejado: ", "Matricula invalida... Digite novamente: ", VAL_MIN_MATRIC_FREQ, VAL_MAX_MATRIC_FREQ);
 	
 	// Verificando se a matricula existe
@@ -189,7 +189,7 @@ void cadastraAtivDesenvolvida(void){
 		LIMPA_TELA;
 		apresentaDadosAcademia();
 		printf("\n");
-		apresentaDadosSeriesExs();
+		apresentaDadosSeriesExsArq();
 		ativDesenvolvida.identificadorSerie = leValidaInt("\n\nCod. identificador da serie desejada: ", "Identificador invalido... Digite novamente: ", VAL_MIN_ID_SERIE, VAL_MAX_ID_SERIE);
 		ativDesenvolvida.dataInicio = obtemDataSistema();
 		ativDesenvolvida.horarioInicio = obtemHoraSistema();
