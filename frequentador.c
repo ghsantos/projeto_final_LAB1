@@ -55,7 +55,7 @@ int obtemPosicaoFreqArq(int matriculaPesq){
 		do frequentador no arquivo
 	Retorno: 0(os dados nao foram recuperados) ou 1(os dados foram recuperados com exito)
 */
-int obtemDadosFrequentador(Frequentador *frequentador, int posicaoFreqArq){
+int obtemDadosFreqPorPosicaoArq(Frequentador *frequentador, int posicaoFreqArq){
 	FILE *arq;
 	int freqEncontrado=0;
 	
@@ -64,6 +64,32 @@ int obtemDadosFrequentador(Frequentador *frequentador, int posicaoFreqArq){
 		if(fseek(arq, sizeof(Frequentador)*(posicaoFreqArq-1), SEEK_SET) == 0){
 			if(fread(frequentador, sizeof(Frequentador), 1, arq) == 1){
 				freqEncontrado=1;
+			}
+		}
+		
+		fclose(arq);
+	}
+	
+	return freqEncontrado;
+}
+
+/*
+	Objetivo: Obter os dados de um frequentador a partir da sua matricula armazenada em um arquivo de entrada
+	Parametros: endereco de memoria da struct que vai armazenar os dados, matricula do frequentador
+	Retorno: 0(os dados nao foram recuperados) ou 1(os dados foram recuperados com exito)
+*/
+int obtemDadosFreqPorMatric(Frequentador *frequentador, int matriculaPesq){
+	FILE *arq;
+	int freqEncontrado=0;
+	
+	arq = fopen(NOME_ARQ_FREQ, "rb");
+	if(arq != NULL){
+		while(feof(arq) == 0){
+			if(fread(frequentador, sizeof(Frequentador), 1, arq) == 1){
+				if(frequentador->matricula == matriculaPesq){
+					freqEncontrado=1;
+					break;
+				}
 			}
 		}
 		
@@ -211,7 +237,7 @@ void alteraDadosFrequentador(void){
 			printf("\n\nNao foi encontrado nenhum frequentador com essa matricula!");
 		} else {
 			// Obtendo os dados do frequentador selecionado
-			if(obtemDadosFrequentador(&frequentador, posicaoFreqArq) == 0){
+			if(obtemDadosFreqPorPosicaoArq(&frequentador, posicaoFreqArq) == 0){
 				printf("\n\nErro ao tentar recuperar os dados do frequentador selecionado!");
 			} else {
 				// Verificando se o usuario modificou algum dado do frequentador
@@ -354,38 +380,31 @@ void excluiFrequentador(void){
 		apresentaDadosFrequentadores();
 		frequentador.matricula = leValidaInt("\n\nMatricula do frequentador a ser excluido: ", "Matricula invalida... Digite novamente: ", VAL_MIN_MATRIC_FREQ, VAL_MAX_MATRIC_FREQ);
 		
-		// Verificando se a matricula existe
-		posicaoFreqArq = obtemPosicaoFreqArq(frequentador.matricula);
-		if(posicaoFreqArq == 0){
+		// Verificando se o frequentador existe e obtendo os dados
+		if(obtemDadosFreqPorMatric(&frequentador, frequentador.matricula) == 0){
 			printf("\n\nNao foi encontrado nenhum frequentador com essa matricula!");
 		} else {
-			// Obtendo os dados do frequentador selecionado
-			if(obtemDadosFrequentador(&frequentador, posicaoFreqArq) == 0){
-				printf("\n\nErro ao tentar recuperar os dados do frequentador!");
+			LIMPA_TELA;
+			apresentaDadosAcademia();
+			apresentaDadosFrequentador(&frequentador);
+			opcaoDesejada = leValidaOpcao("\n\nDeseja excluir esse frequentador[S/n]: ", "Opcao invalida... Digite apenas S ou N: ", "SN");
+			
+			if(opcaoDesejada == 'N'){
+				printf("\n\nNenhum frequentador foi excluido!");
 			} else {
-				LIMPA_TELA;
-				apresentaDadosAcademia();
-				apresentaDadosFrequentador(&frequentador);
-				opcaoDesejada = leValidaOpcao("\n\nDeseja excluir esse frequentador[S/n]: ", "Opcao invalida... Digite apenas S ou N: ", "SN");
-				
-				if(opcaoDesejada == 'N'){
-					printf("\n\nNenhum frequentador foi excluido!");
+				// Verificando se o frequentador ja executou alguma atividade na academia
+				if(verifFreqExecutouAtividades(frequentador.matricula) == 1){
+					printf("\n\nEsse frequentador nao pode ser excluido!\n");
+					printf("Motivo: esse frequentador possui atividades cadastradas!");
 				} else {
-					// Verificando se o frequentador ja executou alguma atividade na academia
-					if(verifFreqExecutouAtividades(frequentador.matricula) == 1){
-						printf("\n\nEsse frequentador nao pode ser excluido!\n");
-						printf("Motivo: esse frequentador possui atividades cadastradas!");
+					// Tentando excluir o frequentador
+					if(removeDadosFreqArq(frequentador.matricula) == 0){
+						printf("\n\nErro ao tentar excluir o frequentador!");
 					} else {
-						// Tentando excluir o frequentador
-						if(removeDadosFreqArq(frequentador.matricula) == 0){
-							printf("\n\nErro ao tentar excluir o frequentador!");
-						} else {
-							printf("\n\nFrequentador excluido com sucesso!");
-						}
+						printf("\n\nFrequentador excluido com sucesso!");
 					}
 				}
 			}
-			
 		}
 	}
 	
