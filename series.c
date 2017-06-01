@@ -104,11 +104,12 @@ int obtemDadosSeriePorCodIdentif(SerieExercicio *serieExercicio, int identificad
 
 
 /*
-	Objetivo: Apresentar os dados de todas as series de exercicios cadastradas
+	Objetivo: Apresentar os dados de todas as series de exercicios cadastradas em um
+		arquivo de entrada
 	Parametros: nenhum
 	Retorno: nenhum
 */
-void apresentaDadosSeriesExs(void){
+void apresentaDadosSeriesExsArq(void){
 	FILE *arq;
 	SerieExercicio serieExercicio;
 	int existeSeriesEx=0;
@@ -132,7 +133,7 @@ void apresentaDadosSeriesExs(void){
 }
 
 /*
-	Objetivo: Apresentar os dados de uma serie de exercicio especifica
+	Objetivo: Apresentar os dados de uma serie de exercicio especifica armazenada em memoria
 	Parametros: endereco de memoria da struct(serie) com os dados a serem exibidos
 	Retorno: nenhum
 */
@@ -241,7 +242,7 @@ void alteraDadosSerieEx(void){
 		printf("\n\nNao existem series de exercicios cadastradas!");
 	} else {
 		printf("\n\n");
-		apresentaDadosSeriesExs();
+		apresentaDadosSeriesExsArq();
 		
 		// Coletando o codigo identificador da serie a ser alterada
 		serieExercicio.identificadorSerie = leValidaInt("\n\nCod. identificador da serie a ser alterada: ", "Identificador invalido... Digite novamente: ", VAL_MIN_ID_SERIE, VAL_MAX_ID_SERIE);
@@ -353,7 +354,6 @@ int gravaDadosSerieAlterada(SerieExercicio *serieExercicio, int posicaoSerieArq)
 */
 void excluiSerieEx(void){
 	SerieExercicio serieExercicio;
-	int posicaSerieArq;
 	char opcaoDesejada;
 	
 	apresentaDadosAcademia();
@@ -362,7 +362,7 @@ void excluiSerieEx(void){
 		printf("\n\nNao existem series de exercicios cadastradas!");
 	} else {
 		printf("\n\n");
-		apresentaDadosSeriesExs();
+		apresentaDadosSeriesExsArq();
 		
 		// Coletando o codigo identificador da serie a ser excluida
 		serieExercicio.identificadorSerie = leValidaInt("\n\nCod. identificador da serie a ser excluida: ", "Identificador invalido... Digite novamente: ", VAL_MIN_ID_SERIE, VAL_MAX_ID_SERIE);
