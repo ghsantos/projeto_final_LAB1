@@ -611,5 +611,5 @@ int verificaOrdenacaoNomeFreq(const void *p1, const void *p2){
 	freq1 = (Frequentador*) p1;
 	freq2 = (Frequentador*) p2;
 	
-	return stricmp(freq1->nome, freq2->nome);
+	return strcasecmpLAB(freq1->nome, freq2->nome);
 }
