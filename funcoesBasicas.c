@@ -570,6 +570,33 @@ int diferencaDias(Data dataInicial, Data dataFinal){
 }
 
 /*
+	Objetivo: Verificar se uma data esta em um determinado intervalo
+	Parametros: a struct da dataInicial, da dataFinal e dataIntervalo
+	Retorno: 1 a data esta no intervalo ou 0 caso contrario
+*/
+int verificaIntervaloDatas(Data dataInicial, Data dataFinal, Data dataIntervalo){
+	int datIni=0, datFin=0, datIntervalo=0;
+
+	datIni = dataInicial.ano * 10000;
+	datIni += dataInicial.mes * 100;
+	datIni += dataInicial.dia;
+	
+ 	datFin = dataFinal.ano * 10000;
+	datFin += dataFinal.mes * 100;
+	datFin += dataFinal.dia;
+	
+	datIntervalo = dataIntervalo.ano * 10000;
+	datIntervalo += dataIntervalo.mes * 100;
+	datIntervalo += dataIntervalo.dia;
+	
+	if(datIni <= datIntervalo && datIntervalo <= datFin){
+		return 1;
+	} else{
+		return 0;
+	}
+}
+
+/*
 	Objetivo: Verificar se um arquivo existe
 	Parametros: endereco de memoria da string com o nome do arquivo
 	Retorno: 0(nao existe) ou 1(existe)

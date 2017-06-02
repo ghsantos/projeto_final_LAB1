@@ -21,6 +21,7 @@ int geraNroIntAleatorio(int valMin, int valMax);
 Data obtemDataSistema(void);
 Horario obtemHoraSistema(void);
 int diferencaDias(Data dataInicial, Data dataFinal);
+int verificaIntervaloDatas(Data dataInicial, Data dataFinal, Data dataIntervalo);
 int verificaArqExiste(char *nomeArq);
 void continuarComEnter(char *msg);
 void apresentaOpcoesMenuPrincipal(void);
