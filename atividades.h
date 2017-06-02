@@ -8,6 +8,7 @@
 #include "series.h"
 
 void apresentaDadosAtividadesArq(void);
+void apresentaDadosAtividadesMemoria(AtividadeDesenvolvida *atividades, int qtdAtividades);
 void apresentaDadosAtividadesArqIndice(void);
 void apresentaDadosAtivDesenvolvida(AtividadeDesenvolvida *ativDesenvolvida);
 void apresentaAtivsFrequentador(int matriculaPesq);

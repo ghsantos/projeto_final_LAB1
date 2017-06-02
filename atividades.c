@@ -31,6 +31,21 @@ void apresentaDadosAtividadesArq(void){
 }
 
 /*
+	Objetivo: Apresentar os dados de das atividades armazenadas em memoria
+	Parametros: o endereco inicial do vetor de atividades e a qtd de atividades
+	Retorno: nenhum
+*/
+void apresentaDadosAtividadesMemoria(AtividadeDesenvolvida *atividades, int qtdAtividades){
+	int cont;
+	
+	for(cont=0; cont<qtdAtividades; ++cont){
+		printf("%-22d%-10d", atividades[cont].matriculaFrequentador, atividades[cont].identificadorSerie);
+		printf("%02d/%02d/%d ", atividades[cont].dataInicio.dia, atividades[cont].dataInicio.mes, atividades[cont].dataInicio.ano);
+		printf("%02d:%02d\n", atividades[cont].horarioInicio.hora, atividades[cont].horarioInicio.minutos);
+	}
+}
+
+/*
 	Objetivo: Apresentar os dados de todas as atividades desenvolvidas cadastradas com
 		um indice seletor
 	Parametros: nenhum
