@@ -114,6 +114,30 @@ void leValidaTexto(char *msg, char *msgErro, char *texto, int tamMinTexto, int t
 }
 
 /*
+	Objetivo: Ler e validar uma data
+	Parametros: endereco de memoria da string mensagem
+	Retorno: a data validada
+*/
+Data leValidaData(char *msg){
+	int dataValida;
+	Data data;
+
+	do{
+		printf("\n%s\n", msg);
+		data.dia = leValidaInt("Dia: ", "Dia invalido... Digite novamente: ", 1, 31);
+		data.mes = leValidaInt("\nMes: ", "Mes invalido... Digite novamente: ", 1, 12);
+		data.ano = leValidaInt("\nAno: ", "Ano invalido... Digite novamente: ", 1901, 2037);
+		dataValida = verifDataValida(data);
+		
+		if(dataValida == 0){
+			printf("\nData invalida... Digite novamente!");
+		}
+	}while(dataValida == 0);
+	
+	return data;
+}
+
+/*
 	Objetivo: Tirar o \n de uma string
 	Parametros: endereco de memoria da string texto
 	Retorno: nenhum
