@@ -479,7 +479,6 @@ int removeDadosSerieArq(int identificadorSerieExc){
 */
 void pesqSerieExPorCodIdentif(void){
 	SerieExercicio serieExercicio;
-	char opcaoDesejada;
 	
 	apresentaDadosAcademia();
 	
