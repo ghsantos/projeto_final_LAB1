@@ -483,8 +483,6 @@ int removeDadosFreqArq(int matriculaFreqExc){
 */
 void pesqFrequentadorPelaMatric(void){
 	Frequentador frequentador;
-	char opcaoDesejada;
-	
 	
 	apresentaDadosAcademia();
 	
