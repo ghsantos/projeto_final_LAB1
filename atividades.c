@@ -46,7 +46,7 @@ void apresentaDadosAtividadesArqIndice(void){
 		printf("%-8.8s%-22.22s%-10.10s%s\n", "Indice", "Matric. Frequentador", "Id Serie", "Data e hora do inicio");
 		while(feof(arq) == 0){
 			if(fread(&ativDesenvolvida, sizeof(AtividadeDesenvolvida), 1, arq) == 1){
-				printf("%-7d", cont);
+				printf("%-8d", cont);
 				printf("%-22d%-10d", ativDesenvolvida.matriculaFrequentador, ativDesenvolvida.identificadorSerie);
 				printf("%02d/%02d/%d ", ativDesenvolvida.dataInicio.dia, ativDesenvolvida.dataInicio.mes, ativDesenvolvida.dataInicio.ano);
 				printf("%02d:%02d\n", ativDesenvolvida.horarioInicio.hora, ativDesenvolvida.horarioInicio.minutos);
