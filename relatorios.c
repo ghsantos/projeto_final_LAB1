@@ -37,6 +37,7 @@ void geraRelatorios(void){
 				break;
 			
 			case 'F':
+				listaDadosFrequentadoresIntervalo();
 				break;
 				
 			case 'G':

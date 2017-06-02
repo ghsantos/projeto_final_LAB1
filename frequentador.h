@@ -33,6 +33,7 @@ int verificaOrdenacaoNomeFreq(const void *p1, const void *p2);
 
 void pesqFrequentadoresPelaSerie(void);
 void pesqDadosFrequentadorIntervalo(void);
+void listaDadosFrequentadoresIntervalo(void);
 void pesqNaoFrequentaPorQtdDias(void);
 
 #endif // FREQUENTADOR_H
