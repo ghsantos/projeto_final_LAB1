@@ -614,5 +614,7 @@ void apresentaOpcoesMenuRelatorios(void){
 	printf("C - Pesquisar frequentadores pelo nome (R2) [OK]\n");
 	printf("D - Pesquisar frequentador por serie realizada (R3)\n");
 	printf("E - Filtrar atividades dos frequentadores por datas (R4)\n");
+	printf("F - Listar frequentadores por uma faixa de tempo (R5)\n");
+	printf("G - Pesquisar frequentadores que nao frequentam a uma qtd de dias (R6)\n");
 	printf("Z - Retornar ao menu principal\n\n");
 }

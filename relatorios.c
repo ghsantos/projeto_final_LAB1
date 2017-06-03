@@ -12,7 +12,7 @@ void geraRelatorios(void){
 		LIMPA_TELA;
 		apresentaDadosAcademia();
 		apresentaOpcoesMenuRelatorios();
-		opcaoDesejada = leValidaOpcao("Opcao desejada: ", "Opcao invalida... Digite novamente: ", "ABCDEZ");
+		opcaoDesejada = leValidaOpcao("Opcao desejada: ", "Opcao invalida... Digite novamente: ", "ABCDEFGZ");
 		LIMPA_TELA;
 		
 		switch(opcaoDesejada){
@@ -33,6 +33,12 @@ void geraRelatorios(void){
 				break;
 				
 			case 'E':
+				break;
+			
+			case 'F':
+				break;
+				
+			case 'G':
 				break;
 		}
 	}while(opcaoDesejada != 'Z');
