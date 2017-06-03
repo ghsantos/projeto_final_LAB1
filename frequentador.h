@@ -31,4 +31,6 @@ void pesqFrequentadoresPeloNome(void);
 void ordenaFreqPeloNome(Frequentador *frequentadores, int qtdFreq);
 int verificaOrdenacaoNomeFreq(const void *p1, const void *p2);
 
+void pesqFrequentadoresPelaSerie(void);
+
 #endif // FREQUENTADOR_H

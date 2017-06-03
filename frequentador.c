@@ -611,3 +611,146 @@ int verificaOrdenacaoNomeFreq(const void *p1, const void *p2){
 	
 	return strcasecmpLAB(freq1->nome, freq2->nome);
 }
+
+void pesqFrequentadoresPelaSerie(void){
+	int identificadorSerie, erroPesquisa=0;
+	int qtdAtivEncontradas=0, qtdFreqEncontrados=0;
+	FILE *arqvFrequentador, *arqvAtividade;
+	AtividadeDesenvolvida *atividades=NULL, *atividadesAux, atvdLida;
+	Frequentador *frequentadores=NULL, *frequentadoresAux, freqLido;
+	int cont;
+
+	apresentaDadosAcademia();
+	printf("\n");
+	
+	// Verificando se existem atividades cadastradas
+	if(obtemQtdAtivDesevCadastradas() == 0){
+		printf("Nao existem atividades cadastradas!");
+		continuarComEnter("\n\nPressione [Enter] para continuar...");
+		return;
+	}
+	
+	// Caso existam series
+	apresentaDadosSeriesExsArq();
+	
+	// Coletando o identifiador da serie a ser pesquisado
+	identificadorSerie = leValidaInt("\n\nCod. Identificador da serie: ", "Identificador invalido... Digite novamente: ", VAL_MIN_ID_SERIE, VAL_MAX_ID_SERIE);
+	
+	if(!existeSerie(identificadorSerie)){
+		printf("\nSerie nao encontrada!");
+		continuarComEnter("\n\nPressione [Enter] para continuar...");
+		return;
+	}
+	
+	arqvAtividade = fopen(NOME_ARQ_ATIVDESEV, "rb");
+	
+	if(arqvAtividade == NULL){
+		printf("\n\nErro ao tentar ler o arquivo com os dados!\n");
+		erroPesquisa=1;
+	} else {
+		// Pesquisando e filtrando o dados
+		while(!feof(arqvAtividade)){
+			if(fread(&atvdLida, sizeof(AtividadeDesenvolvida), 1, arqvAtividade) == 1){
+				// Comparando o identifiador lido no arquivo com o pesquisado
+				if(atvdLida.identificadorSerie == identificadorSerie){
+					// Tentando alocar memoria
+					atividadesAux = realloc(atividades, sizeof(AtividadeDesenvolvida)*(qtdAtivEncontradas+1));
+					
+					if(atividadesAux != NULL){
+						atividades = atividadesAux;
+						atividades[qtdAtivEncontradas] = atvdLida;
+						++qtdAtivEncontradas;
+					} else{
+						printf("\n\nErro de alocacao!\n");
+						erroPesquisa=1;
+						break;
+					}
+				}
+			}
+		}
+	
+		fclose(arqvAtividade);
+	}
+	
+	// Verificando se ocorreu algum erro
+	if(erroPesquisa == 1){
+		printf("Pesquisa encerrada!");
+		continuarComEnter("\n\nPressione [Enter] para continuar...");
+		
+		return;
+	} else if(qtdAtivEncontradas == 0){
+		printf("\n\nNao foi encontrado nenhuma atividade com esse identifiador!");
+		continuarComEnter("\n\nPressione [Enter] para continuar...");
+		
+		return;
+	}
+	
+	arqvFrequentador = fopen(NOME_ARQ_FREQ, "rb");
+	
+	if(arqvFrequentador == NULL){
+		printf("\n\nErro ao tentar ler o arquivo com os dados!\n");
+		erroPesquisa=1;
+	} else {
+		// Pesquisando e filtrando o dados
+		while(!feof(arqvFrequentador)){
+			if(fread(&freqLido, sizeof(Frequentador), 1, arqvFrequentador) == 1){
+			
+				for(cont=0; cont<qtdAtivEncontradas; ++cont){
+					// Comparando o identifiador lido no arquivo com o pesquisado
+					if(freqLido.matricula == atividades[cont].matriculaFrequentador){
+						// Tentando alocar memoria
+						frequentadoresAux = realloc(frequentadores, sizeof(Frequentador)*(qtdFreqEncontrados+1));
+					
+						if(frequentadoresAux != NULL){
+							frequentadores = frequentadoresAux;
+							frequentadores[qtdFreqEncontrados] = freqLido;
+							++qtdFreqEncontrados;
+						} else{
+							printf("\n\nErro de alocacao!\n");
+							erroPesquisa=1;
+						}
+						
+						break;
+					}
+				}
+				
+				if(erroPesquisa == 1){
+					break;
+				}
+			}
+		}
+	
+		fclose(arqvFrequentador);
+	}
+	
+	// Verificando se ocorreu algum erro
+	if(erroPesquisa == 1){
+		printf("Pesquisa encerrada!");
+		continuarComEnter("\n\nPressione [Enter] para continuar...");
+		
+		return;
+	} else if(qtdFreqEncontrados == 0){
+		printf("\n\nNao foi encontrado nenhum frequentador para essa serie!");
+		continuarComEnter("\n\nPressione [Enter] para continuar...");
+		
+		return;
+	}
+	
+	
+	
+	// Ordenando os frequentadores encontrados pelo nome
+	ordenaFreqPeloNome(frequentadores, qtdFreqEncontrados);
+	
+	LIMPA_TELA;
+	apresentaDadosAcademia();
+	
+	// apresenta os dados encontrados
+	printf("\nFrequentadores encontrados:\n\n");
+	
+	apresentaDadosFrequentadoresMemoria(frequentadores, qtdFreqEncontrados);
+	
+	free(atividades);
+	free(frequentadores);
+	
+	continuarComEnter("\n\nPressione [Enter] para continuar...");
+}

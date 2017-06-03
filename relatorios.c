@@ -29,6 +29,7 @@ void geraRelatorios(void){
 				break;
 				
 			case 'D':
+				pesqFrequentadoresPelaSerie();
 				break;
 				
 			case 'E':
