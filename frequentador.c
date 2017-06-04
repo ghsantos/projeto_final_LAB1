@@ -11,7 +11,10 @@ int obtemQtdFreqCadastrados(void){
 	
 	arq = fopen(NOME_ARQ_FREQ, "rb");
 	if(arq != NULL){
+		// Inicia o apontador no final do arquivo
 		if(fseek(arq, 0, SEEK_END) == 0){
+			// O ftell() coleta a posicao atual do apontador do arquivo em bytes em
+			// relacao ao inicio do arquivo
 			qtdFrequentadores = ftell(arq) / sizeof(Frequentador);
 		}
 		fclose(arq);
@@ -112,10 +115,10 @@ void apresentaDadosFrequentadoresArq(void){
 	
 	arq = fopen(NOME_ARQ_FREQ, "rb");
 	if(arq != NULL){
-		printf("%-10.10s%-15.15s%-13.13s%-11.11s%s\n", "Matricula", "Nome", "CPF", "Sexo", "Peso (kg)");
+		printf("%-10.10s%-16.16s%-13.13s%-11.11s%s\n", "Matricula", "Nome", "CPF", "Sexo", "Peso (kg)");
 		while(feof(arq) == 0){
 			if(fread(&frequentador, sizeof(Frequentador), 1, arq) == 1){
-				printf("%-10d%-14.14s %-13.13s", frequentador.matricula, frequentador.nome, frequentador.cpf);
+				printf("%-10d%-14.14s  %-13.13s", frequentador.matricula, frequentador.nome, frequentador.cpf);
 				printf("%-11.11s", frequentador.sexo == 'M' ? "Masculino" : "Feminino");
 				printf("%.2f\n", frequentador.peso);
 				existeFreq=1;
@@ -137,10 +140,10 @@ void apresentaDadosFrequentadoresArq(void){
 void apresentaDadosFrequentadoresMemoria(Frequentador *frequentadores, int qtdFreq){
 	int cont;
 	
-	printf("%-10.10s%-15.15s%-13.13s%-11.11s%s\n", "Matricula", "Nome", "CPF", "Sexo", "Peso (kg)");
+	printf("%-10.10s%-16.16s%-13.13s%-11.11s%s\n", "Matricula", "Nome", "CPF", "Sexo", "Peso (kg)");
 	
 	for(cont=0; cont<qtdFreq; cont++){
-		printf("%-10d%-14.14s %-13.13s", frequentadores[cont].matricula, frequentadores[cont].nome, frequentadores[cont].cpf);
+		printf("%-10d%-14.14s  %-13.13s", frequentadores[cont].matricula, frequentadores[cont].nome, frequentadores[cont].cpf);
 		printf("%-11.11s", frequentadores[cont].sexo == 'M' ? "Masculino" : "Feminino");
 		printf("%.2f\n", frequentadores[cont].peso);
 	}
@@ -179,11 +182,11 @@ void cadastraFrequentador(void){
 	printf("Matricula gerada: %d\n", frequentador.matricula);
 	
 	// Obtendo o nome
-	leValidaTexto("\nNome completo: ", "Nome invalido... Digite novamente: ", frequentador.nome, TAM_MIN_NOME_FREQ, TAM_MAX_NOME_FREQ);
+	leValidaTexto("\nNome completo: ", "Nome invalido... Digite novamente: ", frequentador.nome, TAM_NOME_FREQ);
 	
 	// Lendo e validando o CPF
 	do{
-		leValidaTexto("\nCPF (apenas nros): ", "CPF invalido... Digite os 11 digitos: ", frequentador.cpf, (TAM_CPF-1), TAM_CPF);
+		leValidaTexto("\nCPF (apenas nros): ", "CPF invalido... Digite os 11 digitos: ", frequentador.cpf, TAM_CPF);
 		cpfValido = verifCPFValido(frequentador.cpf);
 		
 		if(cpfValido == 0){
@@ -303,13 +306,13 @@ int modificaFrequentador(Frequentador *frequentador){
 		
 		switch(opcaoDesejada){
 			case 'N':{
-				leValidaTexto("\nNovo nome: ", "Nome invalido... Digite ao menos 3 caracteres: ", frequentador->nome, TAM_MIN_NOME_FREQ, TAM_MAX_NOME_FREQ);
+				leValidaTexto("\nNovo nome: ", "Nome invalido... Digite novamente: ", frequentador->nome, TAM_NOME_FREQ);
 				break;
 			}
 				
 			case 'C':{
 				do{
-					leValidaTexto("\nNovo CPF (apenas nros): ", "CPF invalido... Digite os 11 digitos: ", frequentador->cpf, (TAM_CPF-1), TAM_CPF);
+					leValidaTexto("\nNovo CPF (apenas nros): ", "CPF invalido... Digite os 11 digitos: ", frequentador->cpf, TAM_CPF);
 					dadoValido = verifCPFValido(frequentador->cpf);
 					
 					if(dadoValido == 0){
@@ -330,18 +333,7 @@ int modificaFrequentador(Frequentador *frequentador){
 			}
 			
 			case 'D':{
-				do{
-					printf("\nNova data de ingresso\n");
-					frequentador->dataIngresso.dia = leValidaInt("Dia: ", "Dia invalido... Digite novamente: ", 1, 31);
-					frequentador->dataIngresso.mes = leValidaInt("\nMes: ", "Mes invalido... Digite novamente: ", 1, 12);
-					frequentador->dataIngresso.ano = leValidaInt("\nAno: ", "Ano invalido... Digite novamente: ", 1901, 2037);
-					dadoValido = verifDataValida(frequentador->dataIngresso);
-					
-					if(dadoValido == 0){
-						printf("\nData invalida... Digite novamente!");
-					}
-				}while(dadoValido == 0);
-				
+				frequentador->dataIngresso = leValidaData("\nNova data de ingresso");
 				break;
 			}
 			
@@ -512,7 +504,7 @@ void pesqFrequentadorPelaMatric(void){
 */
 void pesqFrequentadoresPeloNome(void){
 	FILE *arq;
-	char nomeFreqPesq[TAM_MAX_NOME_FREQ], nomeFreqLidoAux[TAM_MAX_NOME_FREQ];
+	char nomeFreqPesq[TAM_NOME_FREQ], nomeFreqLidoAux[TAM_NOME_FREQ];
 	Frequentador *frequentadores=NULL, *freqAux, freqLido;
 	int qtdFreqEncontrados=0, erroPesquisa=0;
 	
@@ -532,7 +524,7 @@ void pesqFrequentadoresPeloNome(void){
 	apresentaDadosFrequentadoresArq();
 	
 	// Coletando o nome a ser pesquisado
-	leValidaTexto("\n\nDigite o nome do frequentador a ser pesquisado: ", "Nome invalido... Digite ao menos 3 caracteres: ", nomeFreqPesq, TAM_MIN_NOME_FREQ, TAM_MAX_NOME_FREQ);
+	leValidaTexto("\n\nDigite o nome do frequentador a ser pesquisado: ", "Nome invalido... Digite novamente: ", nomeFreqPesq, TAM_NOME_FREQ);
 	
 	// Transformando o nome para minusculo para facilitar a busca
 	toLowerStr(nomeFreqPesq);
@@ -559,6 +551,11 @@ void pesqFrequentadoresPeloNome(void){
 						frequentadores[qtdFreqEncontrados] = freqLido;
 						qtdFreqEncontrados++;
 					} else {
+						// Desalocando a memoria que estava alocada
+						if(qtdFreqEncontrados > 0){
+							free(frequentadores);
+						}
+						
 						printf("\n\nErro de alocacao!\n");
 						erroPesquisa=1;
 						break;
@@ -609,7 +606,7 @@ int verificaOrdenacaoNomeFreq(const void *p1, const void *p2){
 	freq1 = (Frequentador*) p1;
 	freq2 = (Frequentador*) p2;
 	
-	return strcasecmpLAB(freq1->nome, freq2->nome);
+	return stricmp(freq1->nome, freq2->nome);
 }
 
 /*
@@ -667,6 +664,11 @@ void pesqFrequentadoresPelaSerie(void){
 						atividades[qtdAtivEncontradas] = atvdLida;
 						++qtdAtivEncontradas;
 					} else{
+						// Desalocando a memoria alocada antes do erro
+						if(qtdAtivEncontradas > 0){
+							free(atividades);
+						}
+						
 						printf("\n\nErro de alocacao!\n");
 						erroPesquisa=1;
 						break;
@@ -712,6 +714,11 @@ void pesqFrequentadoresPelaSerie(void){
 							frequentadores[qtdFreqEncontrados] = freqLido;
 							++qtdFreqEncontrados;
 						} else{
+							// Desalocando a memoria alocada antes do erro
+							if(qtdFreqEncontrados > 0){
+								free(frequentadores);
+							}
+							
 							printf("\n\nErro de alocacao!\n");
 							erroPesquisa=1;
 						}
@@ -763,7 +770,7 @@ void pesqFrequentadoresPelaSerie(void){
 
 /*
 	Objetivo: Dado um frequentador, informar todas as atividades desenvolvidas por ele na
-			  academia em uma faixa de datas (de... até...) completa (dia/mês/ano) fornecida pelo usuário.
+			  academia em uma faixa de datas (de... ate...) completa (dia/mes/ano) fornecida pelo usuario.
 	Parametros: nenhum
 	Retorno: nenhum
 */
@@ -774,6 +781,7 @@ void pesqDadosFrequentadorIntervalo(void){
 	Data dataInicial, dataFinal;
 	
 	apresentaDadosAcademia();
+	printf("\n");
 	
 	// Verificando se existem frequentadores cadastrados
 	if(obtemQtdFreqCadastrados() == 0){
@@ -825,6 +833,11 @@ void pesqDadosFrequentadorIntervalo(void){
 						atividades[qtdAtivEncontradas] = ativdLida;
 						++qtdAtivEncontradas;
 					} else{
+						// Desalocando a memoria alocada antes do erro
+						if(qtdAtivEncontradas > 0){
+							free(atividades);
+						}
+						
 						printf("\n\nErro de alocacao!\n");
 						erroPesquisa=1;
 						break;
@@ -863,7 +876,7 @@ void pesqDadosFrequentadorIntervalo(void){
 
 /*
 	Objetivo: Listar todos os frequentadores que utilizaram a academia em uma faixa de datas
-			  completa (de... até...) (dia/mês/ano) fornecida pelo usuário
+			  completa (de... ate...) (dia/mes/ano) fornecida pelo usuario
 	Parametros: nenhum
 	Retorno: nenhum
 */
@@ -913,6 +926,11 @@ void listaDadosFrequentadoresIntervalo(void){
 						atividades[qtdAtivEncontradas] = ativdLida;
 						++qtdAtivEncontradas;
 					} else{
+						// Desalocando a memoria alocada antes do erro
+						if(qtdAtivEncontradas > 0){
+							free(atividades);
+						}
+						
 						printf("\n\nErro de alocacao!\n");
 						erroPesquisa=1;
 						break;
@@ -931,7 +949,7 @@ void listaDadosFrequentadoresIntervalo(void){
 		
 		return;
 	} else if(qtdAtivEncontradas == 0){
-		printf("\n\nNao foi encontrado nenhum frequentador para essa serie!");
+		printf("\n\nNao foi encontrado nenhum frequentador!");
 		continuarComEnter("\n\nPressione [Enter] para continuar...");
 		
 		return;
@@ -959,6 +977,14 @@ void listaDadosFrequentadoresIntervalo(void){
 							frequentadores[qtdFreqEncontrados] = freqLido;
 							++qtdFreqEncontrados;
 						} else{
+							// Liberando a memoria alocada antes do erro
+							if(qtdFreqEncontrados == 0){
+								free(atividades);
+							} else {
+								free(atividades);
+								free(frequentadores);
+							}
+							
 							printf("\n\nErro de alocacao!\n");
 							erroPesquisa=1;
 						}
@@ -983,8 +1009,9 @@ void listaDadosFrequentadoresIntervalo(void){
 		
 		return;
 	} else if(qtdFreqEncontrados == 0){
-		printf("\n\nNao foi encontrado nenhum frequentador para essa serie!");
+		printf("\n\nNao foi encontrado nenhum frequentador!");
 		continuarComEnter("\n\nPressione [Enter] para continuar...");
+		free(atividades);
 		
 		return;
 	}
@@ -1052,6 +1079,11 @@ void pesqNaoFrequentaPorQtdDias(void){
 						atividades[qtdAtivEncontradas] = atvdLida;
 						++qtdAtivEncontradas;
 					} else{
+						// Liberando a memoria que foi alocada antes do erro
+						if(qtdAtivEncontradas > 0){
+							free(atividades);
+						}
+						
 						printf("\n\nErro de alocacao!\n");
 						erroPesquisa=1;
 						break;
@@ -1097,6 +1129,14 @@ void pesqNaoFrequentaPorQtdDias(void){
 							frequentadores[qtdFreqEncontrados] = freqLido;
 							++qtdFreqEncontrados;
 						} else{
+							// Liberando a memoria alocada antes do erro
+							if(qtdFreqEncontrados == 0){
+								free(atividades);
+							} else {
+								free(atividades);
+								free(frequentadores);
+							}
+							
 							printf("\n\nErro de alocacao!\n");
 							erroPesquisa=1;
 						}
@@ -1123,6 +1163,7 @@ void pesqNaoFrequentaPorQtdDias(void){
 	} else if(qtdFreqEncontrados == 0){
 		printf("\n\nNao foi encontrado nenhum frequentador para essa serie!");
 		continuarComEnter("\n\nPressione [Enter] para continuar...");
+		free(atividades);
 		
 		return;
 	}

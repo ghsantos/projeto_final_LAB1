@@ -1,3 +1,4 @@
+// Diretivas de compilacao condicional
 #ifndef FREQUENTADOR_H
 #define FREQUENTADOR_H
 
