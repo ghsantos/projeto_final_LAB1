@@ -1,3 +1,4 @@
+// Diretivas de compilacao condicional
 #ifndef ESTRUTURAS_H
 #define ESTRUTURAS_H
 
@@ -15,13 +16,13 @@ typedef struct Horario{
 } Horario;
 
 typedef struct Academia{
-	char nome[TAM_MAX_NOME_ACADEMIA];
-	char endereco[TAM_MAX_END_ACADEMIA];
+	char nome[TAM_NOME_ACADEMIA];
+	char endereco[TAM_END_ACADEMIA];
 } Academia;
 
 typedef struct Frequentador{
 	int matricula;
-	char nome[TAM_MAX_NOME_FREQ];
+	char nome[TAM_NOME_FREQ];
 	char cpf[TAM_CPF];
 	float peso;
 	char sexo;
