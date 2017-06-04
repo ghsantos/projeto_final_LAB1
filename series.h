@@ -1,3 +1,4 @@
+// Diretivas de compilacao condicional
 #ifndef SERIES_H
 #define SERIES_H
 

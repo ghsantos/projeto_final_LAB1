@@ -162,7 +162,7 @@ void cadastraSerieEx(void){
 		printf("\n\nEssa serie ja foi cadastrada!");
 	} else {
 		// Coletando a descricao
-		leValidaTexto("\nDescricao: ", "Descricao invalida... Digite novamente: ", serieExercicio.descricao, TAM_MIN_DESCRICAO_SERIE, TAM_MAX_DESCRICAO_SERIE);
+		leValidaTexto("\nDescricao: ", "Descricao invalida... Digite novamente: ", serieExercicio.descricao, TAM_DESCRICAO_SERIE);
 		
 		// Coletando o duracao prevista em minutos e a qtd de calorias a serem perdidas
 		serieExercicio.duracao = leValidaInt("\nDuracao (minutos): ", "Duracao invalida... Digite novamente: ", VAL_MIN_DURACAO_SERIE, VAL_MAX_DURACAO_SERIE);
@@ -299,7 +299,7 @@ int modificaSerieEx(SerieExercicio *serieExercicio){
 		
 		switch(opcaoDesejada){
 			case 'D':{
-				leValidaTexto("\nNova descricao: ", "Descricao invalida... Digite novamente: ", serieExercicio->descricao, TAM_MIN_DESCRICAO_SERIE, TAM_MAX_DESCRICAO_SERIE);
+				leValidaTexto("\nNova descricao: ", "Descricao invalida... Digite novamente: ", serieExercicio->descricao, TAM_DESCRICAO_SERIE);
 				break;
 			}
 			
