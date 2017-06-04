@@ -133,7 +133,7 @@ void apresentaTodosCadastros(void){
 			printf("\n");
 			obtemQtdAtivDesevCadastradas() == 0 ? 
 						printf("\nNao existem atividade desenvolvidas cadastradas!") :
-						apresentaDadosAtividadesArqIndice();
+						apresentaDadosAtividadesArq();
 			break;
 		}
 		
