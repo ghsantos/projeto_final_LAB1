@@ -1,3 +1,4 @@
+// Diretivas de compilacao condicional
 #ifndef ATIVIDADES_H
 #define ATIVIDADES_H
 

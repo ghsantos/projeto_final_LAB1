@@ -12,10 +12,10 @@ void apresentaDadosAtividadesArq(void){
 	
 	arq = fopen(NOME_ARQ_ATIVDESEV, "rb");
 	if(arq != NULL){
-		printf("%-22.22s%-10.10s%s\n", "Matric. Frequentador", "Id Serie", "Data e hora do inicio");
+		printf("%-18.18s%-10.10s%s\n", "Matricula Freq.", "Id Serie", "Data e hora do inicio");
 		while(feof(arq) == 0){
 			if(fread(&ativDesenvolvida, sizeof(AtividadeDesenvolvida), 1, arq) == 1){
-				printf("%-22d%-10d", ativDesenvolvida.matriculaFrequentador, ativDesenvolvida.identificadorSerie);
+				printf("%-18d%-10d", ativDesenvolvida.matriculaFrequentador, ativDesenvolvida.identificadorSerie);
 				printf("%02d/%02d/%d ", ativDesenvolvida.dataInicio.dia, ativDesenvolvida.dataInicio.mes, ativDesenvolvida.dataInicio.ano);
 				printf("%02d:%02d\n", ativDesenvolvida.horarioInicio.hora, ativDesenvolvida.horarioInicio.minutos);
 				existeAtividades=1;
@@ -38,10 +38,10 @@ void apresentaDadosAtividadesArq(void){
 void apresentaDadosAtividadesMemoria(AtividadeDesenvolvida *atividades, int qtdAtividades){
 	int cont;
 	
-	printf("%-22.22s%-10.10s%s\n", "Matric. Frequentador", "Id Serie", "Data e hora do inicio");
+	printf("%-18.18s%-10.10s%s\n", "Matricula Freq.", "Id Serie", "Data e hora do inicio");
 	
 	for(cont=0; cont<qtdAtividades; ++cont){
-		printf("%-22d%-10d", atividades[cont].matriculaFrequentador, atividades[cont].identificadorSerie);
+		printf("%-18d%-10d", atividades[cont].matriculaFrequentador, atividades[cont].identificadorSerie);
 		printf("%02d/%02d/%d ", atividades[cont].dataInicio.dia, atividades[cont].dataInicio.mes, atividades[cont].dataInicio.ano);
 		printf("%02d:%02d\n", atividades[cont].horarioInicio.hora, atividades[cont].horarioInicio.minutos);
 	}
@@ -60,7 +60,7 @@ void apresentaDadosAtividadesArqIndice(void){
 	
 	arq = fopen(NOME_ARQ_ATIVDESEV, "rb");
 	if(arq != NULL){
-		printf("%-8.8s%-22.22s%-10.10s%s\n", "Indice", "Matric. Frequentador", "Id Serie", "Data e hora do inicio");
+		printf("%-8.8s%-18.18s%-10.10s%s\n", "Indice", "Matricula Freq.", "Id Serie", "Data e hora do inicio");
 		while(feof(arq) == 0){
 			if(fread(&ativDesenvolvida, sizeof(AtividadeDesenvolvida), 1, arq) == 1){
 				printf("%-8d", cont);
@@ -92,7 +92,7 @@ void apresentaAtivsFrequentador(int matriculaPesq){
 	
 	arq = fopen(NOME_ARQ_ATIVDESEV, "rb");
 	if(arq != NULL){
-		printf("%-22.22s%-10.10s%s\n", "Matric. Frequentador", "Id Serie", "Data e hora do inicio");
+		printf("%-18.18s%-10.10s%s\n", "Matricula Freq.", "Id Serie", "Data e hora do inicio");
 		while(feof(arq) == 0){
 			if(fread(&ativDesenvolvida, sizeof(AtividadeDesenvolvida), 1, arq) == 1){
 				if(ativDesenvolvida.matriculaFrequentador == matriculaPesq){
@@ -283,6 +283,8 @@ int verifFreqFezAlgumaAtividade(int matriculaVerif){
 				}
 			}
 		}
+		
+		fclose(arq);
 	}
 	
 	return jaDesenvolveuAtiv;
@@ -327,6 +329,7 @@ void cadastraAtivDesenvolvida(void){
 		apresentaDadosAcademia();
 		printf("\n");
 		apresentaDadosSeriesExsArq();
+		
 		ativDesenvolvida.identificadorSerie = leValidaInt("\n\nCod. identificador da serie desejada: ", "Identificador invalido... Digite novamente: ", VAL_MIN_ID_SERIE, VAL_MAX_ID_SERIE);
 		ativDesenvolvida.dataInicio = obtemDataSistema();
 		ativDesenvolvida.horarioInicio = obtemHoraSistema();
@@ -405,7 +408,7 @@ void excluiAtivDesenvolvida(void){
 	apresentaDadosAtividadesArqIndice();
 	
 	// Coletando indice do frequentador
-	indice = leValidaInt("\n\nDigite o indice do frequentador: ", "Indice inexistente... Digite novamente: ", 1, qtdAtivDesevCadastradas);
+	indice = leValidaInt("\n\nDigite o indice da atividade a ser excluida: ", "Indice inexistente... Digite novamente: ", 1, qtdAtivDesevCadastradas);
 	
 	// Obtendo as informacoes da atividade
 	if(obtemDadosAtivPorPosicaoArq(&ativDesenvolvida, indice) == 0){
@@ -513,23 +516,14 @@ void pesqAtivDesevPelaChaveUnica(void){
 		
 		ativDesenvolvida.identificadorSerie = leValidaInt("\n\nCod. identificador da serie desejada: ", "Identificador invalido... Digite novamente: ", VAL_MIN_ID_SERIE, VAL_MAX_ID_SERIE);
 		
-		do{
-			printf("\nData de inicio\n");
-			ativDesenvolvida.dataInicio.dia = leValidaInt("Dia: ", "Dia invalido... Digite novamente: ", 1, 31);
-			ativDesenvolvida.dataInicio.mes = leValidaInt("\nMes: ", "Mes invalido... Digite novamente: ", 1, 12);
-			ativDesenvolvida.dataInicio.ano = leValidaInt("\nAno: ", "Ano invalido... Digite novamente: ", 1901, 2037);
-			dataValida = verifDataValida(ativDesenvolvida.dataInicio);
-			
-			if(dataValida == 0){
-				printf("\nData invalida... Digite novamente!");
-			}
-		}while(dataValida == 0);
+		ativDesenvolvida.dataInicio = leValidaData("\nData de inicio");
 		
 		if(obtemDadosAtivPorChaveUnica(&ativDesenvolvida) == 0){
 			printf("\n\nNenhum atividade foi encontrada!");
 		} else {
 			LIMPA_TELA;
 			apresentaDadosAcademia();
+			printf("\nAtividade encontrada: \n");
 			apresentaDadosAtivDesenvolvida(&ativDesenvolvida);
 		}
 	}
