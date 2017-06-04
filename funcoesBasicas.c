@@ -61,80 +61,23 @@ float leValidaFloat(char *msg, char *msgErro, float valMin, float valMax){
 }
 
 /*
-	Objetivo: Ler um texto(string) utilizando alocacao dinamica
-	Parametros: nenhum
-	Retorno: endereco de memoria inicial do vetor de caracteres (string)
-*/
-char* leString(void){
-	char *texto=NULL, *textoAux;
-	char caractere;
-	int qtdCaracteres=0;
-	
-	LIMPA_BUFFER;
-	do{
-		caractere = getchar();
-		
-		textoAux = (char*) realloc(texto, sizeof(char)*(qtdCaracteres+1));
-		if(textoAux != NULL){
-			texto = textoAux;
-			
-			if(caractere != '\n'){
-				texto[qtdCaracteres] = caractere;
-			} else {
-				texto[qtdCaracteres] = '\0';
-			}
-			qtdCaracteres++;
-		} else {
-			break;
-		}
-		
-	}while(caractere != '\n');
-	
-	return texto;
-}
-
-/*
 	Objetivo: Ler e validar um texto
 	Parametros: endereco de memoria da string mensagem, mensagem de erro e do texto,
 		qtd minima e maxima de caracteres a serem permitidos
 	Retorno: nenhum
 */
-void leValidaTexto(char *msg, char *msgErro, char *texto, int tamMinTexto, int tamMaxTexto){
+void leValidaTexto(char *msg, char *msgErro, char *texto, int tamTexto){
 	printf("%s",msg);
 	do{
 		LIMPA_BUFFER;
-		fgets(texto, tamMaxTexto, stdin);
+		fgets(texto, tamTexto, stdin);
 		LIMPA_BUFFER;
 		tiraTerminador(texto);
 		
-		if(strlen(texto) < tamMinTexto){
+		if(strlen(texto) == 0){
 			printf("%s",msgErro);
 		}
-	}while(strlen(texto) < tamMinTexto);
-}
-
-/*
-	Objetivo: Ler e validar uma data
-	Parametros: endereco de memoria da string mensagem
-	Retorno: a data validada
-*/
-Data leValidaData(char *msg){
-	int dataValida;
-	Data data;
-
-	do{
-		printf("\n%s\n", msg);
-		data.dia = leValidaInt("Dia: ", "Dia invalido... Digite novamente: ", 1, 31);
-		data.mes = leValidaInt("\nMes: ", "Mes invalido... Digite novamente: ", 1, 12);
-		data.ano = leValidaInt("\nAno: ", "Ano invalido... Digite novamente: ", 1901, 2037);
-		dataValida = verifDataValida(data);
-		
-		if(dataValida == 0){
-			printf("\nData invalida... Digite novamente!");
-		}
-	}while(dataValida == 0);
-	
-	return data;
+	}while(strlen(texto) == 0);
 }
 
 /*
@@ -168,6 +111,30 @@ char leValidaOpcao(char *msg, char *msgErro, char *opcoesValidas){
 	}while(strchr(opcoesValidas, opcao) == NULL);
 	
 	return opcao;
+}
+
+/*
+	Objetivo: Ler e validar uma data
+	Parametros: endereco de memoria da string mensagem
+	Retorno: a data validada
+*/
+Data leValidaData(char *msg){
+	int dataValida;
+	Data data;
+
+	do{
+		printf("\n%s\n", msg);
+		data.dia = leValidaInt("Dia: ", "Dia invalido... Digite novamente: ", 1, 31);
+		data.mes = leValidaInt("\nMes: ", "Mes invalido... Digite novamente: ", 1, 12);
+		data.ano = leValidaInt("\nAno: ", "Ano invalido... Digite novamente: ", 1901, 2037);
+		dataValida = verifDataValida(data);
+		
+		if(dataValida == 0){
+			printf("\nData invalida... Digite novamente!");
+		}
+	}while(dataValida == 0);
+	
+	return data;
 }
 
 /*
@@ -313,86 +280,6 @@ void toUpperStr(char *str){
 }
 
 /*
-	Objetivo: verificar a existencia de uma substring em uma string ignorando case
-	Parâmetros: o endereco de uma string e de uma substring
- 	retorno: 1 caso a substring exista na string ou 0, caso nao
-*/
-int strcasestrLAB(const char *texto, const char *pesqsa){
-	int existe=0, cont;
-
-	char *str, *find;
-	
-	str = (char *) malloc(sizeof(char) * strlen(texto));
-	
-	if(str != NULL){
-		find = (char *) malloc(sizeof(char) * strlen(pesqsa));
-
-		if(find != NULL){
-			for(cont=0; cont < strlen(texto); ++cont){
-				str[cont] = toupper(texto[cont]);
-			}
-
-			str[cont] = '\0';
-
-			for(cont=0; cont < strlen(pesqsa); ++cont){
-				find[cont] = toupper(pesqsa[cont]);
-			}
-
-			find[cont] = '\0';
-
-			if(strstr(str, find) != NULL){
-				existe = 1;
-			}
-		
-			free(find);
-		}
-		
-		free(str);
-	}
-
-	return existe;
-}
-
-/*
-	Objetivo: comparar duas strings ignorando case
-	Parâmetros: o endereco de duas strings
- 	retorno: o valor da diferenca entre as strings
-*/
-int strcasecmpLAB(const char *texto1, const char *texto2){
-	int comparacao=0, cont;
-
-	char *str1, *str2;
-	
-	str1 = (char *) malloc(sizeof(char) * strlen(texto1));
-	
-	if(str1 != NULL){
-		str2 = (char *) malloc(sizeof(char) * strlen(texto2));
-
-		if(str2 != NULL){
-			for(cont=0; cont < strlen(texto1); ++cont){
-				str1[cont] = toupper(texto1[cont]);
-			}
-
-			str1[cont] = '\0';
-
-			for(cont=0; cont < strlen(texto2); ++cont){
-				str2[cont] = toupper(texto2[cont]);
-			}
-
-			str2[cont] = '\0';
-
-			comparacao = strcmp(str1, str2);
-		
-			free(str2);
-		}
-		
-		free(str1);
-	}
-
-	return comparacao;
-}
-
-/*
 	Objetivo: Gerar um nro inteiro aleatorio
 	Parametros: valor minimo e maximo permitido
 	Retorno: nro aleatorio
@@ -400,6 +287,8 @@ int strcasecmpLAB(const char *texto1, const char *texto2){
 int geraNroIntAleatorio(int valMin, int valMax){
 	int nro;
 	
+	// Semeando/Definindo um valor inicial para a geracao de um nro
+	// aleatorios
 	srand((unsigned)time(NULL));
 	nro = valMin + (rand() % valMax);
 	
@@ -639,7 +528,7 @@ void apresentaOpcoesMenuPrincipal(void){
 	printf("B - Alterar dados\n");
 	printf("C - Excluir\n\n");
 	
-	printf("Serie de Exercicios\n");
+	printf("Serie de Exercicio\n");
 	printf("D - Cadastrar nova\n");
 	printf("E - Alterar dados\n");
 	printf("F - Excluir\n\n");
@@ -660,9 +549,9 @@ void apresentaOpcoesMenuPrincipal(void){
 */
 void apresentaOpcoesMenuRelatorios(void){
 	printf("\nRelatorios disponiveis\n\n");
-	printf("A - Pesquisar dados pela chave primaria (R1) [OK]\n");
-	printf("B - Exibir todos os cadastros do sistema (R1) [OK]\n");
-	printf("C - Pesquisar frequentadores pelo nome (R2) [OK]\n");
+	printf("A - Pesquisar dados pela chave primaria (R1)\n");
+	printf("B - Exibir todos os cadastros do sistema (R1)\n");
+	printf("C - Pesquisar frequentadores pelo nome (R2)\n");
 	printf("D - Pesquisar frequentador por serie realizada (R3)\n");
 	printf("E - Filtrar atividades dos frequentadores por datas (R4)\n");
 	printf("F - Listar frequentadores por uma faixa de tempo (R5)\n");
