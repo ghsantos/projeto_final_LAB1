@@ -15,6 +15,7 @@ int verifArqAcademiaValido(void){
 		while(feof(arq) == 0){
 			if(fread(&academia, sizeof(Academia), 1, arq) == 1){
 				arqValido=1;
+				break;
 			}
 		}
 		fclose(arq);
@@ -35,8 +36,11 @@ void apresentaDadosAcademia(void){
 	
 	arq = fopen(NOME_ARQ_ACAD, "rb");
 	if(arq != NULL){
-		if(fread(&academia, sizeof(Academia), 1, arq) == 1){
-			dadosEncontrados=1;
+		while(feof(arq) == 0){
+			if(fread(&academia, sizeof(Academia), 1, arq) == 1){
+				dadosEncontrados=1;
+				break;
+			}
 		}
 		fclose(arq);
 	}
@@ -53,13 +57,13 @@ void apresentaDadosAcademia(void){
 	Parametros: nenhum
 	Retorno: 0(erro na gravacao) ou 1(gravacao concluida com exito)
 */
-int cadastraAcademia(void){
+int cadastraDadosAcademia(void){
 	Academia academia;
 	int cadastroConcluido=0;
 	
 	printf("DADOS DA ACADEMIA\n\n");
-	leValidaTexto("Nome: ", "Nome invalido... Digite novamente: ", academia.nome, TAM_MIN_NOME_ACADEMIA, TAM_MAX_NOME_ACADEMIA);
-	leValidaTexto("\nEndereco: ", "Endereco invalido... Digite novamente: ", academia.endereco, TAM_MIN_END_ACADEMIA, TAM_MAX_END_ACADEMIA);
+	leValidaTexto("Nome: ", "Nome invalido... Digite novamente: ", academia.nome, TAM_NOME_ACADEMIA);
+	leValidaTexto("\nEndereco: ", "Endereco invalido... Digite novamente: ", academia.endereco, TAM_END_ACADEMIA);
 	
 	// Tentando gravar os dados da academia em um arquivo de saida
 	if(gravaArqDadosAcademia(&academia) == 1){
@@ -78,7 +82,7 @@ int cadastraAcademia(void){
 */
 int gravaArqDadosAcademia(Academia *academia){
 	FILE *arq;
-	int gravacaoConcluida;
+	int gravacaoConcluida=0;
 	
 	arq = fopen(NOME_ARQ_ACAD, "wb");
 	if(arq != NULL){
