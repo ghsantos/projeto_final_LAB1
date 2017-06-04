@@ -28,7 +28,7 @@ int main(void){
 	// Verificando se o arquivo com os dados da academia e valido/existe
 	if(verifArqAcademiaValido() == 0){
 		// Tentando cadastrar os dados da academia
-		if(cadastraAcademia() == 0){
+		if(cadastraDadosAcademia() == 0){
 			printf("Nao foi possivel identificar a academia! \nO programa sera encerrado.");
 			return 0;
 		}
