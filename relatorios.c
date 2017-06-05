@@ -33,6 +33,7 @@ void geraRelatorios(void){
 				break;
 				
 			case 'E':
+				pesqDadosFrequentadorIntervalo();
 				break;
 			
 			case 'F':

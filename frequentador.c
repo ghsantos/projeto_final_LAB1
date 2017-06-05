@@ -762,6 +762,107 @@ void pesqFrequentadoresPelaSerie(void){
 }
 
 /*
+	Objetivo: Dado um frequentador, informar todas as atividades desenvolvidas por ele na
+			  academia em uma faixa de datas (de... até...) completa (dia/mês/ano) fornecida pelo usuário.
+	Parametros: nenhum
+	Retorno: nenhum
+*/
+void pesqDadosFrequentadorIntervalo(void){
+	int matriculaFrequentador, erroPesquisa=0, qtdAtivEncontradas=0;
+	AtividadeDesenvolvida *atividades=NULL, *atividadesAux, ativdLida;
+	FILE *arqv;
+	Data dataInicial, dataFinal;
+	
+	apresentaDadosAcademia();
+	
+	// Verificando se existem frequentadores cadastrados
+	if(obtemQtdFreqCadastrados() == 0){
+		printf("Nao existem frequentadores cadastrados!");
+		continuarComEnter("\n\nPressione [Enter] para continuar...");
+		return;
+	}
+	
+	// Caso existam frequentadores
+	apresentaDadosFrequentadoresArq();
+	
+	matriculaFrequentador = leValidaInt("\n\nMatricula do frequentador a ser pesquisado: ", "Matricula invalida... Digite novamente: ", VAL_MIN_MATRIC_FREQ, VAL_MAX_MATRIC_FREQ);
+	
+	if(obtemPosicaoFreqArq(matriculaFrequentador) == 0){
+		printf("Frequentador nao encontrado");
+		continuarComEnter("\n\nPressione [Enter] para continuar...");
+		return;
+	}
+	
+	dataInicial = leValidaData("Data inicial da pesquisa: ");
+	dataFinal = leValidaData("Data final da pesquisa: ");
+	
+	if(diferencaDias(dataInicial, dataFinal) < 0){
+		printf("Data inicial maior que a data final\n");
+		continuarComEnter("\n\nPressione [Enter] para continuar...");
+		return;
+	}
+	
+	// verificaIntervaloDatas(Data dataInicial, Data dataFinal, Data dataIntervalo)
+	
+	arqv = fopen(NOME_ARQ_ATIVDESEV, "rb");
+	
+	if(arqv == NULL){
+		printf("\n\nErro ao tentar ler o arquivo com os dados!\n");
+		erroPesquisa=1;
+	} else{
+		// Pesquisando e filtrando o dados
+		while(!feof(arqv)){
+			if(fread(&ativdLida, sizeof(AtividadeDesenvolvida), 1, arqv) == 1){
+				// Comparando o identifiador lido no arquivo com o pesquisado
+				printf("aaaaaaaaaaaa %d\n", verificaIntervaloDatas(dataInicial, dataFinal, ativdLida.dataInicio));
+				
+				if(matriculaFrequentador == ativdLida.matriculaFrequentador &&
+				   verificaIntervaloDatas(dataInicial, dataFinal, ativdLida.dataInicio) == 1){
+					// Tentando alocar memoria
+					atividadesAux = realloc(atividades, sizeof(AtividadeDesenvolvida)*(qtdAtivEncontradas+1));
+					
+					if(atividadesAux != NULL){
+						atividades = atividadesAux;
+						atividades[qtdAtivEncontradas] = ativdLida;
+						++qtdAtivEncontradas;
+					} else{
+						printf("\n\nErro de alocacao!\n");
+						erroPesquisa=1;
+						break;
+					}
+				}
+			}
+		}
+	
+		fclose(arqv);
+	}
+	
+	// Verificando se ocorreu algum erro
+	if(erroPesquisa == 1){
+		printf("Pesquisa encerrada!");
+		continuarComEnter("\n\nPressione [Enter] para continuar...");
+		
+		return;
+	} else if(qtdAtivEncontradas == 0){
+		printf("\n\nNao foi encontrado nenhum frequentador para essa serie!");
+		continuarComEnter("\n\nPressione [Enter] para continuar...");
+		
+		return;
+	}
+	
+	LIMPA_TELA;
+	apresentaDadosAcademia();
+	
+	printf("\n");
+	
+	apresentaDadosAtividadesMemoria(atividades, qtdAtivEncontradas);
+	
+	free(atividades);
+	
+	continuarComEnter("\n\nPressione [Enter] para continuar...");
+}
+
+/*
 	Objetivo: Pesquisar frequentadores que nao utilizam a academia por mais de uma quantidade de dias
 	Parametros: nenhum
 	Retorno: nenhum
