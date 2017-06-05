@@ -814,7 +814,6 @@ void pesqDadosFrequentadorIntervalo(void){
 		while(!feof(arqv)){
 			if(fread(&ativdLida, sizeof(AtividadeDesenvolvida), 1, arqv) == 1){
 				// Comparando o identifiador lido no arquivo com o pesquisado
-				printf("aaaaaaaaaaaa %d\n", verificaIntervaloDatas(dataInicial, dataFinal, ativdLida.dataInicio));
 				
 				if(matriculaFrequentador == ativdLida.matriculaFrequentador &&
 				   verificaIntervaloDatas(dataInicial, dataFinal, ativdLida.dataInicio) == 1){
