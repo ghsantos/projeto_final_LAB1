@@ -38,6 +38,8 @@ void apresentaDadosAtividadesArq(void){
 void apresentaDadosAtividadesMemoria(AtividadeDesenvolvida *atividades, int qtdAtividades){
 	int cont;
 	
+	printf("%-22.22s%-10.10s%s\n", "Matric. Frequentador", "Id Serie", "Data e hora do inicio");
+	
 	for(cont=0; cont<qtdAtividades; ++cont){
 		printf("%-22d%-10d", atividades[cont].matriculaFrequentador, atividades[cont].identificadorSerie);
 		printf("%02d/%02d/%d ", atividades[cont].dataInicio.dia, atividades[cont].dataInicio.mes, atividades[cont].dataInicio.ano);
