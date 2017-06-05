@@ -612,6 +612,12 @@ int verificaOrdenacaoNomeFreq(const void *p1, const void *p2){
 	return strcasecmpLAB(freq1->nome, freq2->nome);
 }
 
+/*
+	Objetivo: Relacionar todos os frequentadores que executaram
+			  pelo menos uma vez uma série de exercício.
+	Parametros: nenhum
+	Retorno: nenhum
+*/
 void pesqFrequentadoresPelaSerie(void){
 	int identificadorSerie, erroPesquisa=0;
 	int qtdAtivEncontradas=0, qtdFreqEncontrados=0;
