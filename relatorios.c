@@ -39,6 +39,7 @@ void geraRelatorios(void){
 				break;
 				
 			case 'G':
+				pesqNaoFrequentaPorQtdDias();
 				break;
 		}
 	}while(opcaoDesejada != 'Z');

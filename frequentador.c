@@ -754,3 +754,141 @@ void pesqFrequentadoresPelaSerie(void){
 	
 	continuarComEnter("\n\nPressione [Enter] para continuar...");
 }
+
+/*
+	Objetivo: Pesquisar frequentadores que nao utilizam a academia por mais de uma quantidade de dias
+	Parametros: nenhum
+	Retorno: nenhum
+*/
+void pesqNaoFrequentaPorQtdDias(void){
+	int qtdDias, erroPesquisa=0;
+	int qtdAtivEncontradas=0, qtdFreqEncontrados=0;
+	FILE *arqvFrequentador, *arqvAtividade;
+	AtividadeDesenvolvida *atividades=NULL, *atividadesAux, atvdLida;
+	Frequentador *frequentadores=NULL, *frequentadoresAux, freqLido;
+	int cont;
+	
+	apresentaDadosAcademia();
+	printf("\n");
+	
+	// Verificando se existem atividades cadastradas
+	if(obtemQtdAtivDesevCadastradas() == 0){
+		printf("Nao existem atividades cadastradas!");
+		continuarComEnter("\n\nPressione [Enter] para continuar...");
+		return;
+	}
+	
+	qtdDias = leValidaInt("\n\nInforme a qtd de dias: ", "Valor invalido... Digite novamente: ", 1, 5000);
+	
+	arqvAtividade = fopen(NOME_ARQ_ATIVDESEV, "rb");
+	
+	if(arqvAtividade == NULL){
+		printf("\n\nErro ao tentar ler o arquivo com os dados!\n");
+		erroPesquisa=1;
+	} else {
+		// Pesquisando e filtrando o dados
+		while(!feof(arqvAtividade)){
+			if(fread(&atvdLida, sizeof(AtividadeDesenvolvida), 1, arqvAtividade) == 1){
+				// Comparando o identifiador lido no arquivo com o pesquisado
+				if(diferencaDias(atvdLida.dataInicio, obtemDataSistema()) > qtdDias){
+					// Tentando alocar memoria
+					atividadesAux = realloc(atividades, sizeof(AtividadeDesenvolvida)*(qtdAtivEncontradas+1));
+					
+					if(atividadesAux != NULL){
+						atividades = atividadesAux;
+						atividades[qtdAtivEncontradas] = atvdLida;
+						++qtdAtivEncontradas;
+					} else{
+						printf("\n\nErro de alocacao!\n");
+						erroPesquisa=1;
+						break;
+					}
+				}
+			}
+		}
+	
+		fclose(arqvAtividade);
+	}
+	
+	// Verificando se ocorreu algum erro
+	if(erroPesquisa == 1){
+		printf("Pesquisa encerrada!");
+		continuarComEnter("\n\nPressione [Enter] para continuar...");
+		
+		return;
+	} else if(qtdAtivEncontradas == 0){
+		printf("\n\nNao foi encontrado nenhuma atividade feita a mais de %d dias!", qtdDias);
+		continuarComEnter("\n\nPressione [Enter] para continuar...");
+		
+		return;
+	}
+	
+	arqvFrequentador = fopen(NOME_ARQ_FREQ, "rb");
+	
+	if(arqvFrequentador == NULL){
+		printf("\n\nErro ao tentar ler o arquivo com os dados!\n");
+		erroPesquisa=1;
+	} else {
+		// Pesquisando e filtrando o dados
+		while(!feof(arqvFrequentador)){
+			if(fread(&freqLido, sizeof(Frequentador), 1, arqvFrequentador) == 1){
+			
+				for(cont=0; cont<qtdAtivEncontradas; ++cont){
+					// Comparando o identifiador lido no arquivo com o pesquisado
+					if(freqLido.matricula == atividades[cont].matriculaFrequentador){
+						// Tentando alocar memoria
+						frequentadoresAux = realloc(frequentadores, sizeof(Frequentador)*(qtdFreqEncontrados+1));
+					
+						if(frequentadoresAux != NULL){
+							frequentadores = frequentadoresAux;
+							frequentadores[qtdFreqEncontrados] = freqLido;
+							++qtdFreqEncontrados;
+						} else{
+							printf("\n\nErro de alocacao!\n");
+							erroPesquisa=1;
+						}
+						
+						break;
+					}
+				}
+				
+				if(erroPesquisa == 1){
+					break;
+				}
+			}
+		}
+	
+		fclose(arqvFrequentador);
+	}
+	
+	// Verificando se ocorreu algum erro
+	if(erroPesquisa == 1){
+		printf("Pesquisa encerrada!");
+		continuarComEnter("\n\nPressione [Enter] para continuar...");
+		
+		return;
+	} else if(qtdFreqEncontrados == 0){
+		printf("\n\nNao foi encontrado nenhum frequentador para essa serie!");
+		continuarComEnter("\n\nPressione [Enter] para continuar...");
+		
+		return;
+	}
+	
+	
+	
+	// Ordenando os frequentadores encontrados pelo nome
+	ordenaFreqPeloNome(frequentadores, qtdFreqEncontrados);
+	
+	LIMPA_TELA;
+	apresentaDadosAcademia();
+	
+	// apresenta os dados encontrados
+	printf("\nFrequentadores encontrados:\n\n");
+	
+	apresentaDadosFrequentadoresMemoria(frequentadores, qtdFreqEncontrados);
+	
+	free(atividades);
+	free(frequentadores);
+	
+	continuarComEnter("\n\nPressione [Enter] para continuar...");
+}
