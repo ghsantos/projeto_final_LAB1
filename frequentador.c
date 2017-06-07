@@ -606,7 +606,13 @@ int verificaOrdenacaoNomeFreq(const void *p1, const void *p2){
 	freq1 = (Frequentador*) p1;
 	freq2 = (Frequentador*) p2;
 	
+	// Se for executado no S.O Linux
+	#ifdef __linux__
+	return strcasecmp(freq1->nome, freq2->nome);
+	// Senao
+	#else
 	return stricmp(freq1->nome, freq2->nome);
+	#endif // Fim da verificacao do S.O
 }
 
 /*
