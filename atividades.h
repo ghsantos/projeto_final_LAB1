@@ -9,7 +9,7 @@
 #include "series.h"
 
 void apresentaDadosAtividadesArq(void);
-void apresentaDadosAtividadesMemoria(AtividadeDesenvolvida *atividades, int qtdAtividades);
+void apresentaDadosAtividadesTempoCal(AtividadeDesenvolvida *atividades, int qtdAtividades, int qtdTempoAcademia ,int qtdCaloriasPerdidas);
 void apresentaDadosAtividadesArqIndice(void);
 void apresentaDadosAtivDesenvolvida(AtividadeDesenvolvida *ativDesenvolvida);
 void apresentaAtivsFrequentador(int matriculaPesq);

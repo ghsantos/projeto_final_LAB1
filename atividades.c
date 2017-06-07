@@ -31,11 +31,13 @@ void apresentaDadosAtividadesArq(void){
 }
 
 /*
-	Objetivo: Apresentar os dados de das atividades armazenadas em memoria
-	Parametros: o endereco inicial do vetor de atividades e a qtd de atividades
+	Objetivo: Apresentar os dados de das atividades armazenadas em memoria,
+			  o total de tempo na academia e o total de calorias perdidas
+	Parametros: o endereco inicial do vetor de atividades, a qtd de atividades,
+				o total de tempo na academia e o total de calorias perdidas
 	Retorno: nenhum
 */
-void apresentaDadosAtividadesMemoria(AtividadeDesenvolvida *atividades, int qtdAtividades){
+void apresentaDadosAtividadesTempoCal(AtividadeDesenvolvida *atividades, int qtdAtividades, int qtdTempoAcademia ,int qtdCaloriasPerdidas){
 	int cont;
 	
 	printf("%-18.18s%-10.10s%s\n", "Matricula Freq.", "Id Serie", "Data e hora do inicio");
@@ -45,6 +47,9 @@ void apresentaDadosAtividadesMemoria(AtividadeDesenvolvida *atividades, int qtdA
 		printf("%02d/%02d/%d ", atividades[cont].dataInicio.dia, atividades[cont].dataInicio.mes, atividades[cont].dataInicio.ano);
 		printf("%02d:%02d\n", atividades[cont].horarioInicio.hora, atividades[cont].horarioInicio.minutos);
 	}
+	
+	printf("\nQuantidade de minutos na academia: %d\n", qtdTempoAcademia);
+	printf("Quantidade de calorias perdidas: %d\n", qtdCaloriasPerdidas);
 }
 
 /*

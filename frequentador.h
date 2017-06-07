@@ -33,6 +33,10 @@ void ordenaFreqPeloNome(Frequentador *frequentadores, int qtdFreq);
 int verificaOrdenacaoNomeFreq(const void *p1, const void *p2);
 
 void pesqFrequentadoresPelaSerie(void);
+
+int obtemQtdTempoAcademia(AtividadeDesenvolvida *atividades, int qtdAtivEncontradas);
+int obtemQtdCalolPerdidas(AtividadeDesenvolvida *atividades, int qtdAtivEncontradas);
+
 void pesqDadosFrequentadorIntervalo(void);
 void listaDadosFrequentadoresIntervalo(void);
 void pesqNaoFrequentaPorQtdDias(void);

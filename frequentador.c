@@ -775,6 +775,62 @@ void pesqFrequentadoresPelaSerie(void){
 }
 
 /*
+	Objetivo: Obter a quantidade de tempo que um fequentador ficou na academia
+	Parametros: o endereco inicial do vetor de atividades e a qtd de atividades feitas por um fequentador
+	Retorno: a quantidade de tempo gasto
+*/
+int obtemQtdTempoAcademia(AtividadeDesenvolvida *atividades, int qtdAtivEncontradas){
+	int qtdTempoAcademia=0, cont;
+	FILE *arq;
+	SerieExercicio serieExercicio;
+	
+	arq = fopen(NOME_ARQ_SERIEEX, "rb");
+	if(arq != NULL){
+		while(feof(arq) == 0){
+			if(fread(&serieExercicio, sizeof(SerieExercicio), 1, arq) == 1){
+				for(cont=0; cont<qtdAtivEncontradas; ++cont){
+					if(serieExercicio.identificadorSerie == atividades[cont].identificadorSerie){
+						qtdTempoAcademia += serieExercicio.duracao;
+					}
+				}
+			}
+		}
+		
+		fclose(arq);
+	}
+
+	return qtdTempoAcademia;
+}
+
+/*
+	Objetivo: Obter a quantidade de calorias que um fequentador perdeu na academia
+	Parametros: o endereco inicial do vetor de atividades e a qtd de atividades feitas por um fequentador
+	Retorno: a quantidade de calorias perdidas
+*/
+int obtemQtdCalolPerdidas(AtividadeDesenvolvida *atividades, int qtdAtivEncontradas){
+	int qtdCaloriasPerdidas=0, cont;
+	FILE *arq;
+	SerieExercicio serieExercicio;
+	
+	arq = fopen(NOME_ARQ_SERIEEX, "rb");
+	if(arq != NULL){
+		while(feof(arq) == 0){
+			if(fread(&serieExercicio, sizeof(SerieExercicio), 1, arq) == 1){
+				for(cont=0; cont<qtdAtivEncontradas; ++cont){
+					if(serieExercicio.identificadorSerie == atividades[cont].identificadorSerie){
+						qtdCaloriasPerdidas += serieExercicio.qtdCaloriasPerdidas;
+					}
+				}
+			}
+		}
+		
+		fclose(arq);
+	}
+
+	return qtdCaloriasPerdidas;
+}
+
+/*
 	Objetivo: Dado um frequentador, informar todas as atividades desenvolvidas por ele na
 			  academia em uma faixa de datas (de... ate...) completa (dia/mes/ano) fornecida pelo usuario.
 	Parametros: nenhum
@@ -785,6 +841,7 @@ void pesqDadosFrequentadorIntervalo(void){
 	AtividadeDesenvolvida *atividades=NULL, *atividadesAux, ativdLida;
 	FILE *arqv;
 	Data dataInicial, dataFinal;
+	int qtdTempoAcademia, qtdCaloriasPerdidas;
 	
 	apresentaDadosAcademia();
 	printf("\n");
@@ -833,7 +890,7 @@ void pesqDadosFrequentadorIntervalo(void){
 				   verificaIntervaloDatas(dataInicial, dataFinal, ativdLida.dataInicio) == 1){
 					// Tentando alocar memoria
 					atividadesAux = realloc(atividades, sizeof(AtividadeDesenvolvida)*(qtdAtivEncontradas+1));
-					
+						
 					if(atividadesAux != NULL){
 						atividades = atividadesAux;
 						atividades[qtdAtivEncontradas] = ativdLida;
@@ -868,12 +925,15 @@ void pesqDadosFrequentadorIntervalo(void){
 		return;
 	}
 	
+	qtdTempoAcademia = obtemQtdTempoAcademia(atividades, qtdAtivEncontradas);
+	qtdCaloriasPerdidas = obtemQtdCalolPerdidas(atividades, qtdAtivEncontradas);
+	
 	LIMPA_TELA;
 	apresentaDadosAcademia();
 	
 	printf("\n");
 	
-	apresentaDadosAtividadesMemoria(atividades, qtdAtivEncontradas);
+	apresentaDadosAtividadesTempoCal(atividades, qtdAtivEncontradas, qtdTempoAcademia, qtdCaloriasPerdidas);
 	
 	free(atividades);
 	
