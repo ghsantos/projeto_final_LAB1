@@ -489,8 +489,6 @@ int removeDadosAtivDesevArq(int indice){
 */
 void pesqAtivDesevPelaChaveUnica(void){
 	AtividadeDesenvolvida ativDesenvolvida;
-	int dataValida;
-	
 	
 	apresentaDadosAcademia();
 	
